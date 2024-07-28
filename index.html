@@ -2,348 +2,159 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sayhan Rahman - Portfolio</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>MatchMyTaste Web View</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="background">
     <header class="header">
-      <h1 class="ui-btn">
-        <span><span>@</span>sayhan</span><span>1610</span>
-      </h1>
+      <a href="https://web-matchmytaste.onrender.com/" class="logo-link">
+        <img src="static/logo.gif" alt="MatchMyTaste Logo" class="logo" />
+      </a>
+      <h1 class="glitch" data-text="MatchMyTaste">MatchMyTaste</h1>
     </header>
-    <span class="box">
-    <nav class="nav">
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#education">Education</a>
-      <a href="#skills">Skills</a>
-      <a href="#languages">Languages</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <nav class="nav2">
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#education">Education</a>
-    </nav>
-    <nav class="nav2">
-      <a href="#skills">Skills</a>
-      <a href="#languages">Languages</a>
-      <a href="#contact">Contact</a>
-      </div>
-    </nav>
-    </span>
+    <a href="https://web-matchmytaste.onrender.com/" class="logo-link">
+      <img src="static/logo.gif" alt="MatchMyTaste Logo" class="logo-phone" />
+    </a>
     <div class="container">
-      <div id="about" class="section about-section">
-        <div class="section-title">About Me</div>
-        <div class="card">
-          <img src="/static/sayhan_rahman.png" alt="Image of Sayhan Rahman" />
-          <div class="card__content">
-            <p class="card__title">Sayhan Rahman</p>
-            <p class="card__description">
-              Top-performing IB student with outstanding Cambridge IGCSE grades.
-              Over 2 years of hands-on experience in Python and HTML projects,
-              demonstrating a strong aptitude for problem-solving and
-              programming. Eager to apply my skills and contribute effectively
-              in IT industries around.
-            </p>
-          </div>
-          <p class="card___title">Sayhan Rahman</p>
-          <p class="card___description">
-            Top-performing IB student with outstanding Cambridge IGCSE grades.
-            Over 2 years of hands-on experience in Python and HTML projects,
-            demonstrating a strong aptitude for problem-solving and
-            programming. Eager to apply my skills and contribute effectively
-            in IT industries around.
-          </p>
-        </div>
-        
+      <div class="buttons-container">
+        <button class="button" onclick="showArtistSearch()">
+          Search Similar Artists
+        </button>
+        <button class="button" onclick="showTrackSearch()">
+          Search Similar Tracks
+        </button>
+        <button class="button" onclick="showTopTracks()">
+          Top Tracks of the Month
+        </button>
       </div>
-      <div id="experience" class="section">
-        <div class="section-title">Experience</div>
-        <div class="card">
-          <h3>Ultranova Records (2020 - 2021)</h3>
-          <p>
-            Worked as an event organizer and later as an administrator for a
-            community of artists and musicians of professional level.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Galaxy’s Edge (2021 - Present Day)</h3>
-          <p>
-            Served as the moderator and organizer in a community of people from
-            various ethnic backgrounds. Worked actively on automating processes
-            and building bots dedicated to the server.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Gökkuşağı Stem Robotics & Lego Club (2022 - 2023)</h3>
-          <p>
-            Worked as the leader of a stem robotics and Lego club encouraging
-            peers to join in and bring out their creative minds.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Yıldız Teknik Üniversitesi Model United Nations (2024)</h3>
-          <p>
-            Represented as the delegate of Colombia for H-WHO committee in
-            YTUMUN and received an outstanding Honorable Delegate award.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Youth Volunteer at Istanbul&I (2023 - Present Day)</h3>
-          <p>
-            Worked as a resilient volunteer at Istanbul&I on a weekly basis.
-          </p>
-        </div>
-        <div class="card">
-          <h3>IT Officer at Istanbul&I (2024 - Present Day)</h3>
-          <p>
-            Worked as the Junior IT Officer for Istanbul&I managing the data
-            sheets and volunteer tracking systems with the guidance of the
-            Coordinator.
-          </p>
-        </div>
+      <div id="searchInputs" class="search-container">
+        <!-- Input fields will be dynamically added here -->
       </div>
-      <div id="education" class="section">
-        <div class="section-title">Education</div>
-        <div class="card">
-          <h3>
-            Cambridge International General Certificate of Secondary Education
-            (2021-2023)
-          </h3>
-          <p>Gökkuşağı Eğitim Kurumları</p>
-        </div>
-        <div class="card">
-          <h3>International Baccalaureate (Junior Year) (2023-2024)</h3>
-          <p>Gökkuşağı Eğitim Kurumları (IB)</p>
-        </div>
-      </div>
-      <div id="languages" class="section">
-        <div class="section-title">Languages</div>
-        
-        <div class="card lang-card">
-          <img src="/static/icons/english.png" height="120" width="150" alt="English Flag">
-          <div class="lang-card__content">
-            <p class="lang-card__title">English</p>
-            <p class="lang-card__description">Advanced</p>
-          </div>
-        </div>
-      
-        <div class="card lang-card">
-          <img src="/static/icons/bengali.png" height="120" width="auto" alt="Bengali Flag">
-          <div class="lang-card__content">
-            <p class="lang-card__title">Bengali</p>
-            <p class="lang-card__description">Intermediate</p>
-          </div>
-        </div>
-      
-        <div class="card lang-card">
-          <img src="/static/icons/spanish.png" height="120" width="auto"  alt="Spanish Flag">
-          <div class="lang-card__content">
-            <p class="lang-card__title">Spanish</p>
-            <p class="lang-card__description">Basic</p>
-          </div>
-        </div>
-      </div>
-      
-        
-      
-
-      <div id="skills" class="section">
-        <div class="section-title">Skills</div>
-        <div class="card">
-          <!-- Add card class wrapper -->
-          <div class="skillscard">
-            <div class="body">
-              <div class="skill">
-                <div class="skill-name">Software & Design</div>
-                <div class="skill-level">
-                  <div class="skill-percent" style="width: 85%"></div>
-                </div>
-                <div class="skill-percent-number">85%</div>
-              </div>
-              <div class="skill">
-                <div class="skill-name">Communication</div>
-                <div class="skill-level">
-                  <div class="skill-percent" style="width: 75%"></div>
-                </div>
-                <div class="skill-percent-number">75%</div>
-              </div>
-              <div class="skill">
-                <div class="skill-name">Project Management</div>
-                <div class="skill-level">
-                  <div class="skill-percent" style="width: 80%"></div>
-                </div>
-                <div class="skill-percent-number">80%</div>
-              </div>
-            </div>
-          </div>          
-          </div>
-          <div class="card">
-          <h3>Technical Proficiency</h3>
-          <ul>
-            <li></li>
-            <li>Linux</li>
-            <li>Problem Solving</li>
-            <li>CSS</li>
-            <li>HTML</li>
-            <li>Python</li>
-            <li>Microsoft Excel</li>
-          </ul>
-          </div>
-          <div class="card">
-          <h3>Documents</h3>
-          <ul>
-            <li></li>
-            <li>Microsoft Office</li>
-            <li>Google Docs</li>
-          </ul>
-          </div>
-          <div class="card">
-          <h3>Graphic Design</h3>
-          <ul>
-            <li></li>
-            <li>Adobe Illustrator</li>
-            <li>Blender</li>
-            <li>Canva</li>
-            <li>Stable Diffusion</li>
-            <li>DALL-E</li>
-            <li>Discord & Discord API</h3>
-          </ul>
-        </div>
-      </div>
-
-      <div id="projects" class="section">
-        <div class="section-title">My Projects</div>
-
-        <div class="card">
-          <h3>MatchMyTaste API</h3>
-          <p>
-            <a href="https://github.com/sayhan1610/matchmytaste" target="_blank"
-              >GitHub Repository</a
-            >
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>MatchMyTaste Web</h3>
-          <p>
-            <a href="https://web-matchmytaste.onrender.com/" target="_blank"
-              >Web Application</a
-            >
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>BlueBot</h3>
-          <p>
-            <a href="https://web-matchmytaste.onrender.com/" target="_blank"
-              >Web Application</a
-            >
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>ButtonsOfLife</h3>
-          <p>
-            <a
-              href="https://github.com/sayhan1610/buttons-of-life"
-              target="_blank"
-              >GitHub Repository</a
-            >
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>LabTrack</h3>
-          <p>
-            <a href="https://github.com/sayhan1610/LabTrack" target="_blank"
-              >GitHub Repository</a
-            >
-          </p>
-        </div>
-      </div>
-      <div id="gallery" class="section">
-        <div class="section-title">Gallery</div>
-        <div class="gallery-container"></div>
-      </div>      
-      <div id="contact" class="section contact-info">
-        <div class="section-title">Contact</div>
-        <p>
-          Email:
-          <a href="mailto:sayhanrahman@gokkusagi.k12.tr"
-            >sayhanrahman@gokkusagi.k12.tr</a
+      <div id="resultsContainer"></div>
+    </div>
+    <div>
+      <p><br /><br /></p>
+    </div>
+    <footer class="footer">
+      <div class="footer-content">
+        <button class="ui-btn">
+          <span>MatchMyTaste</span>
+          <span
+            ><p></p>
+            &copy;</span
           >
+          <span>sayhan1610</span>
+        </button>
+        <a
+          href="https://github.com/sayhan1610/matchmytaste"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="static/icons/github.png" alt="GitHub" class="social-icon" />
+        </a>
+        <a
+          href="https://discord.gg/VpvYKbasZN"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/discord.webp"
+            alt="Discord"
+            class="social-icon"
+          />
+        </a>
+        <a
+          href="https://www.instagram.com/alexx_sh16/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/instagram.svg"
+            alt="Instagram"
+            class="social-icon"
+          />
+        </a>
+        <a
+          href="https://open.spotify.com/user/8556bvgcc9pwwcj6tscagay4y?si=fdf30ae39d37406a"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/spotify.png"
+            alt="Spotify"
+            class="social-icon"
+          />
+        </a>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/quantum.js"
+    ></script>
+    <l-quantum
+      id="loadingAnimation"
+      size="145"
+      speed="1.75"
+      color="white"
+      style="display: none"
+    ></l-quantum>
+    <div class="floating-button">
+      <button id="expandBtn">
+        <span>Social</span>
+      </button>
+      <div class="social-icons">
+        <a
+          href="https://github.com/sayhan1610/matchmytaste"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="static/icons/github.png" alt="GitHub" class="social-icon" />
+        </a>
+        <a
+          href="https://discord.gg/VpvYKbasZN"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/discord.webp"
+            alt="Discord"
+            class="social-icon"
+          />
+        </a>
+        <a
+          href="https://www.instagram.com/alexx_sh16/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/instagram.svg"
+            alt="Instagram"
+            class="social-icon"
+          />
+        </a>
+        <a
+          href="https://open.spotify.com/user/8556bvgcc9pwwcj6tscagay4y?si=fdf30ae39d37406a"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="static/icons/spotify.png"
+            alt="Spotify"
+            class="social-icon"
+          />
+        </a>
+        <p class="ui-btn">
+          <span>MatchMyTaste</span>
         </p>
-        <p>Phone: +90 551 599 00 55</p>
-        <div class="social-icons">
-          <a href="https://www.instagram.com/alexx_sh16/"
-            ><img src="/static/icons/instagram.svg" alt="Instagram"
-          /></a>
-          <a href="https://discord.gg/VpvYKbasZN"
-            ><img src="/static/icons/discord.webp" alt="Discord"
-          /></a>
-          <a href="https://www.linkedin.com/in/sayhan-rahman-08a1a62a3/"
-            ><img src="/static/icons/linkedin.png" alt="LinkedIn"
-          /></a>
-          <a href="https://t.me/sayhan1610"
-            ><img src="/static/icons/telegram.png" alt="Telegram"
-          /></a>
-          </div>
-        </div>
+        <p>
+          <span class="ui-btn">&copy; sayhan1610</span>
+        </p>
       </div>
     </div>
-    <div class="bubble-container">
-      <div class="bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-      <div class="bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-      <div class="bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-      <div class="bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-      <div class="bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-   </div>
-   <div class="item button-parrot" style="--bg-color: #2c3e50">
-    <button onclick="window.location.href='https://www.youtube.com/watch?v=xvFZjo5PgG0'">Don't click!
-      <div class="parrot"></div>
-      <div class="parrot"></div>
-      <div class="parrot"></div>
-      <div class="parrot"></div>
-      <div class="parrot"></div>
-      <div class="parrot"></div>
-    </button>
-</div>
-<script src="script.js">
-
-</script>
-
   </body>
 </html>
