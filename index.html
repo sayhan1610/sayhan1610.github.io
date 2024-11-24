@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <title>Boba Drops Leader Page</title>
   <head>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gullible Toy</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Sayhan</h1>
-    <h2>18</h2>
-    <h3>Turkey/Bangladesh</h3>
-    <h4>About Me</h4>
-    <p>
-      I am a student at Gokkusagi koleji. I'm the leader of the Hack Club here.
-      I love coding!! I'm a big fan of the Hack Club community.
-    </p>
-    <img
-      class="image1"
-      src="https://ars.els-cdn.com/content/image/3-s2.0-B9780323851251000934-f00093-08-9780323851251.jpg"
-      alt="Image of a cool duck"
+    <div id="shape"></div>
+    <input
+      id="command-input"
+      type="text"
+      placeholder="Enter command (e.g., shape;background-color=red)"
     />
-    <img
-      class="image2"
-      src="https://i.pinimg.com/originals/23/c0/83/23c08362b1d2315c26748eddab138830.jpg"
-      alt="Image of a cool duck too"
-    />
+    <button id="execute-button">Execute</button>
+    <button id="instructions-button">Instructions</button>
+    <div id="command-dropdown-container">
+      <button id="dropdown-button">I'm a noob</button>
+      <div id="command-list" style="display: none"></div>
+    </div>
+    <script>
+      const instructionsButton = document.getElementById("instructions-button");
+      instructionsButton.addEventListener("click", () => {
+        window.location.href = "instructions.html";
+      });
+    </script>
+    <script src="script.js"></script>
   </body>
 </html>
