@@ -33,21 +33,6 @@ async function fetchClientInfo() {
   const ipResponse = await fetch("http://ip-api.com/json");
   const ipData = await ipResponse.json();
 
-  const locationData = await new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve(position.coords);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    } else {
-      reject("Geolocation not supported");
-    }
-  }).catch(() => null);
-
   const userAgent = navigator.userAgent;
   const browserInfo = getBrowserInfo(userAgent);
   const osInfo = getOSInfo(userAgent);
@@ -66,12 +51,7 @@ async function fetchClientInfo() {
     `Operating System: ${osInfo}`,
     `User Agent: ${userAgent}`,
     `Hostname: ${ipData.as || "Not available"}`,
-    `ISP: ${ipData.isp || "Not available"}`,
-    `Location: ${
-      locationData
-        ? `${locationData.latitude}, ${locationData.longitude}`
-        : "Location not shared"
-    }`
+    `ISP: ${ipData.isp || "Not available"}`
   ];
 
   ipInfoText.forEach((text, index) => {
@@ -82,6 +62,7 @@ async function fetchClientInfo() {
     }, index * 3000);  
   });
 }
+
 
 function getBrowserInfo(userAgent) {
   const browserRegex =
@@ -238,4 +219,5 @@ function showPopup() {
 }
 
 showPopup();
+
 
