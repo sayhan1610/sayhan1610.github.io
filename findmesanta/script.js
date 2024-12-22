@@ -29,7 +29,6 @@ function typeWriter(element, text, speed) {
 }
 
 async function fetchClientInfo() {
-  // Use the new API for geolocation
   const ipResponse = await fetch("https://get.geojs.io/v1/ip/geo.json");
   const ipData = await ipResponse.json();
 
@@ -124,7 +123,7 @@ function getOSInfo(userAgent) {
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
+// Written by ChatGPT
 function startFlyingSanta() {
   const santa = document.getElementById("santa");
   const hohoho1 = document.getElementById("hohoho1");
@@ -198,6 +197,7 @@ function startFlyingSanta() {
     flySanta(); // Start flying Santa immediately
   });
 }
+// Until Here
 
 function showPopup() {
   const modal = document.getElementById("modal");
