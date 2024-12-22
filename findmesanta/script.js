@@ -28,9 +28,9 @@ function typeWriter(element, text, speed) {
   type();
 }
 
-
 async function fetchClientInfo() {
-  const ipResponse = await fetch("https://ip-api.com/json");
+  // Use the new API for geolocation
+  const ipResponse = await fetch("https://get.geojs.io/v1/ip/geo.json");
   const ipData = await ipResponse.json();
 
   const locationData = await new Promise((resolve, reject) => {
@@ -58,9 +58,9 @@ async function fetchClientInfo() {
   infoContainer.appendChild(terminalDiv);
 
   const ipInfoText = [
-    `IP Address: ${ipData.query}`,
+    `IP Address: ${ipData.ip}`,
     `Country: ${ipData.country}`,
-    `Region: ${ipData.regionName}`,
+    `Region: ${ipData.region}`,
     `City: ${ipData.city}`,
     `Browser: ${browserInfo}`,
     `Operating System: ${osInfo}`,
@@ -125,7 +125,6 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// By ChatGPT - https://www.chatgpt.com/
 function startFlyingSanta() {
   const santa = document.getElementById("santa");
   const hohoho1 = document.getElementById("hohoho1");
@@ -199,7 +198,6 @@ function startFlyingSanta() {
     flySanta(); // Start flying Santa immediately
   });
 }
-// Until here
 
 function showPopup() {
   const modal = document.getElementById("modal");
@@ -233,9 +231,8 @@ function showPopup() {
     terminalDiv.classList.add("terminal");
     infoContainer.appendChild(terminalDiv);
     terminalDiv.innerHTML = '<p style="color: red;">Could not connect to santaclause@north.pole</p>';
-    typeWriter(terminalDiv, "You have declined the request...You're a naughty kid on the naughty list, the kind of naughty kid who isn’t just casually naughty but extravagantly, ridiculously, outrageously, unapologetically naughty to the point where your naughtiness could be studied as a PhD thesis in the complex art of mischief-making, a kid so deeply embedded in the fabric of the naughty list that Santa himself probably has a dedicated file on you with footnotes, appendices, and cross-referenced charts detailing every single prank, every snarky remark, every sneaky little scheme you've ever concocted, and he likely uses your example in motivational speeches to his elves on how not to behave, because your naughtiness isn’t just run-of-the-mill mischief—it’s an Olympic-level, gold-medal-winning, world-record-setting kind of naughty that defies all logic, stretches the imagination, and leaves everyone from Mrs. Claus to Rudolph shaking their heads in sheer disbelief at how one single kid could manage to embody the chaotic spirit of every troublemaker in history rolled into one relentless, over-energized, havoc-wreaking package of pure, unfiltered mayhem. Please visit again when you are no longer this naughty. ~ A concerned elf", 5);
+    typeWriter(terminalDiv, "You have declined the request. Merry Christmas anyway!", 100);
   });
 }
 
-showPopup();
-
+document.addEventListener("DOMContentLoaded", showPopup);
