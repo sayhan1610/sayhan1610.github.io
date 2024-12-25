@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step One</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffe6f7;
+        background-image: linear-gradient(
+          45deg,
+          #ffe6f7 25%,
+          #ffc2e1 25%,
+          #ffc2e1 50%,
+          #ffe6f7 75%,
+          #ffc2e1 75%
+        );
+        background-size: 56px 56px;
+        animation: moveDiagonal 2s linear infinite;
+      }
+      @keyframes moveDiagonal {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 56px 56px;
+        }
+      }
+      .quiz-container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: white;
+        border-radius: 15px;
+        padding-right: 20px;
+        padding-left: 20px;
+        padding-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, alpha0.2);
+        max-width: 500px;
+        text-align: center;
+      }
+      select {
+        max-width: 200px;
+        text-align: center;
+      }
+      .quiz-container h1 {
+        color: #d63384;
+      }
+      .question {
+        margin: 15px 0;
+        text-align: left;
+      }
+      .quiz-image {
+        width: 100px;
+        margin: 10px 0;
+        border-radius: 5px;
+        align-items: center;
+        display: flex;
+        align-self: center;
+      }
+      button {
+        background-color: #ff66cc;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        background-color: #e055b8;
+      }
+      button:active {
+        scale: 0.88;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1>💗 Step One 💖</h1>
+      <p>
+        Answer the following questions correctly and see how well you know me!
+        🥰
+      </p>
+      <p>I'm trusting you to do only once. Send a screenshot once done</p>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. What's on my head?</p>
+          <img
+            src="/static/on-my-head.png"
+            alt="What's on my head?"
+            class="quiz-image"
+          />
+          <select required name="q1">
+            <option value="">--Choose an answer--</option>
+            <option value="fish">Fish</option>
+            <option value="hat">Hat</option>
+            <option value="baby">Baby</option>
+            <option value="egg">Egg</option>
+            <option value="duck">Duck</option>
+          </select>
+        </div>
+        <div class="question">
+          <p>2. What's my name?</p>
+          <select required name="q2" required>
+            <option value="">--Choose an answer--</option>
+            <option value="axel">Axel</option>
+            <option value="john">John</option>
+            <option value="jane">Jane</option>
+            <option value="jake">Jake</option>
+            <option value="Johan">Johan</option>
+            <option value="abu">
+              Saad Ibn Abdelaziz Ibn Ali Ismael Shik Shak Shok Balla Thein
+              Shawarma Wala bebsi Zyadeh Batata Bdoon Salata Ma3 Ganeenet Bebsi
+              Bardeh Bdoon Thalj Wallak Hamodeh E6fi El Playstation A7san Ma
+              Akaserha 3ala Rassak Hassa O Roo7 Engake3 Jahez 7allak Lal Nom
+              Mohammad Abdallah
+            </option>
+          </select>
+        </div>
+        <div class="question">
+          <p>3. What day was it when I told you about my feelings?</p>
+          <select required name="q3" required>
+            <option value="">--Choose an answer--</option>
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+          </select>
+        </div>
+        <div class="question">
+          <p>4. What is my favorite animal?</p>
+          <select required name="q4">
+            <option value="">--Choose an answer--</option>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="fish">Fish</option>
+            <option value="bird">Bird</option>
+            <option value="rabbit">Rabbit</option>
+            <option value="duck">Duck</option>
+            <option value="horse">Horse</option>
+            <option value="cow">Cow</option>
+          </select>
+        </div>
+        <div class="question">
+          <p>5. What's my go-to song right now?</p>
+          <select required name="q5">
+            <option value="">--Choose an answer--</option>
+            <option value="numb">Numb</option>
+            <option value="appetite">Appetite</option>
+            <option value="goodguy">Good Guy</option>
+            <option value="tired">Tired</option>
+            <option value="thenights">The Nights</option>
+            <option value="heat">Heat</option>
+            <option value="closer">Closer</option>
+            <option value="friends">Friends</option>
+          </select>
+        </div>
+        <button type="submit">Check My Answers!</button>
+      </form>
+      <div id="results" class="hidden">
+        <h2>Results 🎉</h2>
+        <p id="score"></p>
+        <ul id="feedback"></ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const correctAnswers = {
+        q1: "fish",
+        q2: "Johan",
+        q3: "Wednesday",
+        q4: "duck",
+        q5: "appetite",
+      };
+
+      const quizForm = document.getElementById("quizForm");
+      const resultsContainer = document.getElementById("results");
+      const scoreElement = document.getElementById("score");
+      const feedbackList = document.getElementById("feedback");
+
+      const TELEGRAM_BOT_TOKEN = "token";
+      const TELEGRAM_CHAT_ID = "id";
+
+      quizForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(quizForm);
+        let score = 0;
+        let userAnswers = "";
+        feedbackList.innerHTML = "";
+
+        Object.keys(correctAnswers).forEach((key) => {
+          const userAnswer = formData.get(key)?.trim().toLowerCase();
+          const correctAnswer = correctAnswers[key].toLowerCase();
+
+          if (userAnswer === correctAnswer) {
+            score++;
+            feedbackList.innerHTML += `<li>${key.toUpperCase()}: ✅ Correct!</li>`;
+          } else {
+            feedbackList.innerHTML += `<li>${key.toUpperCase()}: ❌ Incorrect! (Correct answer: ${
+              correctAnswers[key]
+            })</li>`;
+          }
+
+          userAnswers += `${key.toUpperCase()}: ${userAnswer || "No Answer"}\n`;
+        });
+
+        resultsContainer.classList.remove("hidden");
+        scoreElement.textContent = `Your score: ${score}/${
+          Object.keys(correctAnswers).length
+        }`;
+
+        const message = `Page 1 Results:\n\nScore: ${score}/${
+          Object.keys(correctAnswers).length
+        }\n\nAnswers:\n${userAnswers}`;
+
+        fetch(
+          `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(
+            message
+          )}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to send message to Telegram");
+            }
+            console.log("Results sent to Telegram successfully!");
+          })
+          .catch((error) => {
+            console.error("Error sending message to Telegram:", error);
+          });
+      });
+    });
+  </script>
+</html>

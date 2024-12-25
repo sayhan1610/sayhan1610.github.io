@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infinite Scroller Challenge</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: white;
+        overflow-y: scroll;
+      }
+
+      .section {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        border-bottom: 2px solid #222;
+      }
+
+      #message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        color: red;
+        text-align: center;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section">Scroll down ⬇️</div>
+      <div class="section">Keep going...</div>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const content = document.getElementById("content");
+        const message = document.getElementById("message");
+        let mainTimer, inactivityTimer;
+        let timeElapsed = 0;
+
+        const messages = [
+          "Not even close...",
+          "Just a little more!",
+          "Are you tired yet?",
+          "Almost there! Or are you?",
+          "Keep going, champ!",
+          "There’s no end, is there?",
+          "Why are you still scrolling?",
+          "Still here? Impressive.",
+          "Bet you can't stop now.",
+          "Keep it coming!",
+          "Are your fingers sore yet?",
+          "Just a few more...",
+          "You’re persistent, I’ll give you that.",
+          "Wow, still going?",
+          "Don’t stop now!",
+          "Getting closer! Maybe.",
+          "You’re relentless!",
+          "This is taking forever, huh?",
+          "Who hurt you?",
+          "Scrolling like a pro.",
+          "You’re a legend for this.",
+          "What’s at the end? Spoiler: nothing.",
+          "You must really love scrolling.",
+          "This is your cardio for the day.",
+          "Faster! Faster!",
+          "What are you hoping to find?",
+          "Don’t give up now.",
+          "Is this a test of willpower?",
+          "You’ve got this!",
+          "Scrolling for gold, eh?",
+          "Do you ever get tired?",
+          "Scroll warrior!",
+          "Almost there. (Not really.)",
+          "Endless scrolling simulator!",
+          "You’re unstoppable!",
+          "This is getting ridiculous.",
+          "Ever heard of a stopping point?",
+          "Just one more scroll.",
+          "How many fingers do you have left?",
+          "Are you speed-scrolling now?",
+          "Still not there.",
+          "There’s no end in sight!",
+          "Is this fun for you?",
+          "Why are you like this?",
+          "Legend has it, you’re still scrolling.",
+          "Do you even know what you’re looking for?",
+          "Scrolling into eternity.",
+          "Nothing to see here!",
+          "Just keep scrolling, just keep scrolling...",
+          "At this point, I’m rooting for you.",
+          "You’re the MVP of scrolling.",
+          "How long can this go on?",
+          "Does this ever get old?",
+          "Keep the momentum going!",
+          "Scroll master in action.",
+          "Have you considered stopping?",
+          "You’re addicted to scrolling, aren’t you?",
+          "What’s your endgame here?",
+          "This is the ultimate test of patience.",
+          "Still no reward!",
+          "Seriously, how are you still here?",
+          "Your dedication is unmatched.",
+          "You’re a scrolling machine.",
+          "I’ve run out of things to say.",
+          "Okay, now I’m impressed.",
+        ];
+
+        function createSection() {
+          const section = document.createElement("div");
+          section.classList.add("section");
+          section.textContent =
+            messages[Math.floor(Math.random() * messages.length)];
+          return section;
+        }
+
+        function resetInactivityTimer() {
+          clearTimeout(inactivityTimer);
+          inactivityTimer = setTimeout(() => {
+            endChallenge("You lost! You stopped scrolling.", false);
+          }, 10000);
+        }
+
+        function startMainTimer() {
+          if (!mainTimer) {
+            mainTimer = setInterval(() => {
+              timeElapsed++;
+              if (timeElapsed >= 30) {
+                endChallenge("🎉 You won! You kept scrolling! 🎉", true);
+              }
+            }, 1000);
+          }
+        }
+
+        async function notifyTelegram(message) {
+          const botToken = "token";
+          const chatId = "id";
+          const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+          await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: message,
+            }),
+          });
+        }
+
+        async function endChallenge(resultMessage, isWin) {
+          clearInterval(mainTimer);
+          clearTimeout(inactivityTimer);
+          content.innerHTML = "";
+          message.textContent = resultMessage;
+          message.style.display = "block";
+
+          const telegramMessage = isWin
+            ? "User has won the infinite scroller challenge!"
+            : "User has lost the infinite scroller challenge.";
+          await notifyTelegram(telegramMessage);
+        }
+
+        window.addEventListener("scroll", () => {
+          const scrollPosition = window.scrollY + window.innerHeight;
+          const bottomPosition = document.body.offsetHeight;
+
+          if (scrollPosition >= bottomPosition - 50) {
+            const newSection = createSection();
+            content.appendChild(newSection);
+          }
+
+          resetInactivityTimer();
+          startMainTimer();
+        });
+
+        resetInactivityTimer();
+      });
+    </script>
+  </body>
+</html>

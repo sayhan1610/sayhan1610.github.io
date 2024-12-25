@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Don't Click the Button</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #101010;
+        font-family: Arial, sans-serif;
+        color: white;
+        text-align: center;
+      }
+
+      .message {
+        font-size: 2rem;
+
+        opacity: 0;
+        transition: opacity 1s ease, transform 1s ease;
+        transform: scale(1.1);
+      }
+
+      .message.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .message.hide {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      .button-container {
+        display: none;
+      }
+
+      .button {
+        padding: 20px 40px;
+        font-size: 2rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        background: linear-gradient(145deg, #ff0000, #990000);
+        box-shadow: 0 0 15px 3px rgba(255, 0, 0, 0.7);
+        cursor: pointer;
+        animation: glow 1.5s infinite;
+      }
+
+      .button:active {
+        transform: scale(0.95);
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 15px 3px rgba(255, 0, 0, 0.7);
+        }
+        50% {
+          box-shadow: 0 0 30px 6px rgba(255, 0, 0, 1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="message" id="msg1">No matter what, do not click the button</h1>
+    <h1 class="message" id="msg2">
+      Even if the website asks you to, do not click the button
+    </h1>
+    <h1 class="message" id="msg3">
+      Even if your life depended on it, do not click the button
+    </h1>
+    <h1 class="message" id="result"></h1>
+    <div class="button-container" id="buttonContainer">
+      <button class="button" id="clickButton">CLICK ME</button>
+    </div>
+    <h1 class="message" id="clickNow">
+      It's ok to click the button now. Trust me!
+    </h1>
+
+    <script>
+      const botToken = "token";
+      const chatId = "id";
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      const messages = [
+        {
+          id: "msg1",
+          text: "No matter what, do not click the button",
+          delay: 5000,
+        },
+        {
+          id: "msg2",
+          text: "Even if the website asks you to, do not click the button",
+          delay: 5000,
+        },
+        {
+          id: "msg3",
+          text: "Even if your life depended on it, do not click the button",
+          delay: 5000,
+        },
+      ];
+
+      const buttonContainer = document.getElementById("buttonContainer");
+      const clickButton = document.getElementById("clickButton");
+      const clickNow = document.getElementById("clickNow");
+      const result = document.getElementById("result");
+
+      let buttonClicked = false;
+
+      async function displayMessages() {
+        for (const message of messages) {
+          const msgElement = document.getElementById(message.id);
+
+          msgElement.classList.add("show");
+          await delay(message.delay);
+
+          msgElement.classList.remove("show");
+          msgElement.classList.add("hide");
+          await delay(1000);
+        }
+
+        buttonContainer.style.display = "block";
+        await delay(100);
+
+        await delay(5000);
+        clickNow.classList.add("show");
+
+        await handleWinScenario();
+      }
+
+      async function handleWinScenario() {
+        await delay(5000);
+        if (!buttonClicked) {
+          fadeAllOut();
+          await delay(1000);
+          result.textContent = "You've won the challenge.";
+          result.style.opacity = 1;
+          sendTelegramMessage("Challenge won. Button not clicked.");
+        }
+      }
+
+      clickButton.addEventListener("click", async () => {
+        buttonClicked = true;
+        fadeAllOut();
+        await delay(1000);
+        result.textContent = "Why did you click? Challenge lost.";
+        result.style.opacity = 1;
+        sendTelegramMessage("Challenge lost. Button clicked.");
+      });
+
+      async function fadeAllOut() {
+        document
+          .querySelectorAll(".message, .button-container")
+          .forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = "scale(0.9)";
+          });
+        await delay(1000);
+      }
+
+      function sendTelegramMessage(message) {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        const data = { chat_id: chatId, text: message };
+
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }).catch((err) => console.error("Error sending message:", err));
+      }
+
+      displayMessages();
+    </script>
+  </body>
+</html>

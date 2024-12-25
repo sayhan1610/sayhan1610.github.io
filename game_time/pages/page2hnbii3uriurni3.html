@@ -1,0 +1,128 @@
+<!--Friend made it for me cos no time-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glowing Buttons</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+
+      h1 {
+        color: white;
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 50px;
+      }
+
+      .button {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        font-size: 48px;
+        font-weight: bold;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        border: none;
+        outline: none;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        z-index: 1;
+        transition: transform 0.2s ease;
+      }
+
+      .button:active {
+        transform: scale(0.95);
+      }
+
+      .red {
+        background-color: #ff0000;
+        box-shadow: 0 0 25px #ff0000, 0 0 50px #ff0000;
+      }
+
+      .blue {
+        background-color: #0000ff;
+        box-shadow: 0 0 25px #0000ff, 0 0 50px #0000ff;
+      }
+
+      .button-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        z-index: 0;
+        animation: flicker 1.5s infinite;
+        pointer-events: none;
+      }
+
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Press only one button. Only the final input will be noted!</h1>
+    <div class="button-container">
+      <button class="button red" id="redButton">S</button>
+      <button class="button blue" id="blueButton">L</button>
+    </div>
+
+    <script>
+      const botToken = "token";
+      const chatId = "id";
+
+      function sendTelegramMessage(message) {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        const data = { chat_id: chatId, text: message };
+
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }).catch((err) => console.error("Error sending message:", err));
+      }
+
+      document.getElementById("redButton").addEventListener("click", () => {
+        sendTelegramMessage("Red button (S) pressed!");
+      });
+
+      document.getElementById("blueButton").addEventListener("click", () => {
+        sendTelegramMessage("Blue button (L) pressed!");
+      });
+    </script>
+  </body>
+</html>

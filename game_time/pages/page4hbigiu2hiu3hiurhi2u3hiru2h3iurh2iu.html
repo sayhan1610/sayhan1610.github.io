@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invisible Button Challenge</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(
+          135deg,
+          #5477d1,
+          #8ca6db,
+          #c3cfe2,
+          #f5f7fa,
+          #c3cfe2,
+          #8ca6db,
+          #5477d1
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .button {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .victory {
+        position: fixed;
+        color: black;
+        font-size: 2rem;
+        text-align: center;
+        display: none;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .fake-zone {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Find the hidden button to win the challenge...</p>
+    <div id="victoryMessage" class="victory">🎉 You Found It! 🎉</div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const body = document.body;
+        const victoryMessage = document.getElementById("victoryMessage");
+
+        function randomPosition() {
+          const x = Math.random() * (window.innerWidth - 70);
+          const y = Math.random() * (window.innerHeight - 70);
+          return { x, y };
+        }
+
+        function createButton() {
+          const button = document.createElement("button");
+          button.classList.add("button");
+
+          const { x, y } = randomPosition();
+          button.style.left = `${x}px`;
+          button.style.top = `${y}px`;
+
+          button.addEventListener("click", () => {
+            button.remove();
+            clearFakeZones();
+            victoryMessage.style.display = "block";
+
+            sendTelegramMessage("Invisible button found! Challenge passed!");
+          });
+
+          body.appendChild(button);
+        }
+
+        function createFakeZones(count = 5) {
+          for (let i = 0; i < count; i++) {
+            const fakeZone = document.createElement("div");
+            fakeZone.classList.add("fake-zone");
+
+            const { x, y } = randomPosition();
+            fakeZone.style.left = `${x}px`;
+            fakeZone.style.top = `${y}px`;
+
+            fakeZone.addEventListener("click", () => {
+              alert("Not there loser. Try again!");
+            });
+
+            body.appendChild(fakeZone);
+          }
+        }
+
+        function clearFakeZones() {
+          document
+            .querySelectorAll(".fake-zone")
+            .forEach((zone) => zone.remove());
+        }
+
+        function sendTelegramMessage(message) {
+          const botToken = "token";
+          const chatId = "id";
+          const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+          fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: message }),
+          }).catch((err) => console.error("Error sending message:", err));
+        }
+
+        function startChallenge() {
+          createButton();
+          createFakeZones();
+        }
+
+        startChallenge();
+      });
+    </script>
+  </body>
+</html>

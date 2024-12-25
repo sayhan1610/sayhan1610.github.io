@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 7</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #0d0d0d; /* Darker background for neon contrast */
+        color: #ffffff;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      h1 {
+        color: #0ff;
+        text-shadow: 0 0 5px #0ff, 0 0 10px #00e6e6, 0 0 15px #0f1;
+        font-size: 2.5rem;
+        animation: pulseText 3s infinite;
+      }
+
+      @keyframes pulseText {
+        0%,
+        100% {
+          text-shadow: 0 0 5px #0ff, 0 0 10px #00e6e6, 0 0 15px #0f1;
+        }
+        50% {
+          text-shadow: 0 0 15px #0ff, 0 0 25px #00e6e6, 0 0 40px #0f1;
+        }
+      }
+
+      .lights {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        margin: 30px;
+      }
+
+      .light {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: red;
+        box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red;
+        transition: background 0.5s ease, box-shadow 0.5s ease;
+      }
+
+      .light.green {
+        background: lime;
+        box-shadow: 0 0 10px lime, 0 0 20px lime, 0 0 40px lime;
+      }
+
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      .button {
+        width: 60px;
+        height: 60px;
+        background: #1a1a1a;
+        border: 2px solid #0f1;
+        border-radius: 10px;
+        cursor: pointer;
+        color: #0f1;
+        font-size: 1.2rem;
+        text-align: center;
+        line-height: 60px;
+        text-shadow: 0 0 5px #0f1, 0 0 10px #00b3b3;
+        transition: all 0.3s ease;
+        animation: fadeGlow 4s infinite;
+      }
+
+      .button:hover {
+        background: #0f1;
+        color: #0d0d0d;
+        box-shadow: 0 0 15px #0f1, 0 0 30px #00b3b3, 0 0 50px #009999;
+        transform: scale(1.1);
+      }
+
+      @keyframes fadeGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 5px #0f1, 0 0 10px #00b3b3;
+        }
+        50% {
+          box-shadow: 0 0 15px #0f1, 0 0 25px #00b3b3, 0 0 40px #009999;
+        }
+      }
+
+      button#retry {
+        margin-top: 30px;
+        padding: 10px 20px;
+        background: #0fc;
+        border: none;
+        border-radius: 10px;
+        color: #0d0d0d;
+        cursor: pointer;
+        font-size: 1.2rem;
+        text-shadow: 0 0 5px #009999;
+        transition: all 0.3s ease;
+      }
+
+      button#retry:hover {
+        background: lime;
+        box-shadow: 0 0 15px lime, 0 0 30px lime, 0 0 50px lime;
+      }
+
+      #message {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #0f1;
+        text-shadow: 0 0 5px #0f1, 0 0 10px #00b3b3;
+        transition: opacity 0.5s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Find the correct sequence to make all the lights green</h1>
+    <div class="lights" id="lights"></div>
+    <div class="buttons" id="buttons"></div>
+    <button id="retry">Reset Sequence</button>
+    <p id="message"></p>
+
+    <script>
+      const lightsContainer = document.getElementById("lights");
+      const buttonsContainer = document.getElementById("buttons");
+      const retryButton = document.getElementById("retry");
+      const message = document.getElementById("message");
+
+      const totalLights = 10;
+      const totalButtons = 20;
+
+      let targetSequence = [];
+      let userSequence = [];
+      let lightStates = Array(totalLights).fill(0);
+      const botToken = "token";
+      const TELEGRAM_API_URL = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const CHAT_ID = "id";
+
+      function sendToTelegram(message) {
+        const url = `${TELEGRAM_API_URL}?chat_id=${CHAT_ID}&text=${encodeURIComponent(
+          message
+        )}`;
+        fetch(url)
+          .then((response) =>
+            console.log("Message sent to Telegram:", response)
+          )
+          .catch((error) => console.error("Telegram Error:", error));
+      }
+
+      function generateTargetSequence() {
+        targetSequence = [];
+        while (targetSequence.length < totalLights) {
+          const randomNum = Math.floor(Math.random() * totalButtons) + 1;
+          if (!targetSequence.includes(randomNum)) {
+            targetSequence.push(randomNum);
+          }
+        }
+      }
+
+      function updateLights() {
+        lightStates = Array(totalLights).fill(0);
+        for (let i = 0; i < userSequence.length; i++) {
+          if (userSequence[i] === targetSequence[i]) {
+            lightStates[i] = 1;
+          } else {
+            break;
+          }
+        }
+        renderLights();
+      }
+
+      function renderLights() {
+        lightsContainer.innerHTML = "";
+        lightStates.forEach((state) => {
+          const light = document.createElement("div");
+          light.classList.add("light");
+          if (state === 1) light.classList.add("green");
+          lightsContainer.appendChild(light);
+        });
+      }
+
+      function renderButtons() {
+        buttonsContainer.innerHTML = "";
+        for (let i = 1; i <= totalButtons; i++) {
+          const button = document.createElement("div");
+          button.classList.add("button");
+          button.textContent = i;
+          button.addEventListener("click", () => handleButtonClick(i));
+          buttonsContainer.appendChild(button);
+        }
+      }
+
+      function handleButtonClick(buttonNumber) {
+        if (userSequence.length === targetSequence.length) return;
+
+        userSequence.push(buttonNumber);
+
+        if (
+          userSequence[userSequence.length - 1] !==
+          targetSequence[userSequence.length - 1]
+        ) {
+          message.textContent = "❌ Wrong button! Sequence reset.";
+          sendToTelegram(
+            `User clicked button ${buttonNumber} - WRONG SEQUENCE. Restarting.`
+          );
+          userSequence = [];
+        } else {
+          message.textContent = "✔️ Keep going!";
+          sendToTelegram(
+            `User clicked button ${buttonNumber} - CORRECT SEQUENCE SO FAR.`
+          );
+        }
+
+        updateLights();
+
+        if (userSequence.length === targetSequence.length) {
+          if (JSON.stringify(userSequence) === JSON.stringify(targetSequence)) {
+            message.textContent = "🎉 Success! You solved the puzzle!";
+            sendToTelegram(
+              `Puzzle SOLVED! Sequence: ${userSequence.join(", ")}`
+            );
+          } else {
+            message.textContent = "❌ Wrong sequence! Try again.";
+            userSequence = [];
+          }
+        }
+      }
+
+      retryButton.addEventListener("click", () => {
+        userSequence = [];
+        message.textContent = "";
+        generateTargetSequence();
+        renderLights();
+        sendToTelegram("Game reset.");
+      });
+
+      generateTargetSequence();
+      renderLights();
+      renderButtons();
+    </script>
+  </body>
+</html>

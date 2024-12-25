@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        scale: 0.7;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #fce4ec;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      canvas {
+        border: 5px solid #0077ff;
+        background-color: #fff;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #0077ff;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .controls {
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .controls-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 5px 0;
+      }
+
+      .arrow-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #0077ff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .arrow-btn:active {
+        transform: scale(0.9);
+        background-color: #005bb5;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maze of Blåhaj</title>
+  </head>
+  <body>
+    <div class="container">
+      <canvas id="mazeCanvas" width="600" height="600"></canvas>
+      <p>Guide Shina to Luco! (Hint: The maze might be...misleading.)</p>
+      <div class="controls">
+        <div class="controls-row">
+          <button id="upBtn" class="arrow-btn">↑</button>
+        </div>
+        <div class="controls-row">
+          <button id="leftBtn" class="arrow-btn">←</button>
+          <button id="downBtn" class="arrow-btn">↓</button>
+          <button id="rightBtn" class="arrow-btn">→</button>
+        </div>
+      </div>
+    </div>
+    <div id="congratsMessage" class="hidden">
+      <h2>🎉 Congrats!! 🎉</h2>
+      <p>
+        You completed the maze! Click
+        <a href="/pages/page2hnbii3uriurni3.html" target="_blank">here</a> for
+        your prize!
+      </p>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const canvas = document.getElementById("mazeCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const tileSize = 30;
+      const rows = canvas.height / tileSize;
+      const cols = canvas.width / tileSize;
+
+      const player = { x: 1, y: 1 };
+      const goal = { x: cols - 2, y: rows - 2 };
+
+      const maze = generateMaze(rows, cols);
+
+      const congratsMessage = document.getElementById("congratsMessage");
+      const botToken = "token";
+      const chatId = "id";
+
+      function movePlayer(direction) {
+        let newX = player.x;
+        let newY = player.y;
+
+        if (direction === "up") newY--;
+        if (direction === "down") newY++;
+        if (direction === "left") newX--;
+        if (direction === "right") newX++;
+
+        if (maze[newY]?.[newX] === 0) {
+          player.x = newX;
+          player.y = newY;
+          drawMaze();
+        }
+
+        if (player.x === goal.x && player.y === goal.y) {
+          congratsMessage.classList.remove("hidden");
+          sendTelegramMessage("Page 2 completed! The maze has been conquered.");
+        }
+      }
+
+      // Keys
+      document.addEventListener("keydown", (e) => {
+        const { key } = e;
+        if (key === "ArrowUp") movePlayer("up");
+        if (key === "ArrowDown") movePlayer("down");
+        if (key === "ArrowLeft") movePlayer("left");
+        if (key === "ArrowRight") movePlayer("right");
+      });
+
+      // Touch buttons
+      document
+        .getElementById("upBtn")
+        .addEventListener("click", () => movePlayer("up"));
+      document
+        .getElementById("downBtn")
+        .addEventListener("click", () => movePlayer("down"));
+      document
+        .getElementById("leftBtn")
+        .addEventListener("click", () => movePlayer("left"));
+      document
+        .getElementById("rightBtn")
+        .addEventListener("click", () => movePlayer("right"));
+
+      function generateMaze(rows, cols) {
+        const maze = Array.from({ length: rows }, () =>
+          Array.from({ length: cols }, () => 1)
+        );
+
+        for (let x = 0; x < cols; x++) {
+          maze[0][x] = maze[rows - 1][x] = 0;
+        }
+        for (let y = 0; y < rows; y++) {
+          maze[y][0] = maze[y][cols - 1] = 0;
+        }
+
+        function carve(x, y) {
+          const directions = [
+            [0, -2], // Up
+            [0, 2], // Down
+            [-2, 0], // Left
+            [2, 0], // Right
+          ];
+          directions.sort(() => Math.random() - 0.5);
+
+          directions.forEach(([dx, dy]) => {
+            const nx = x + dx;
+            const ny = y + dy;
+
+            if (
+              ny > 0 &&
+              ny < rows - 1 &&
+              nx > 0 &&
+              nx < cols - 1 &&
+              maze[ny][nx] === 1
+            ) {
+              maze[ny][nx] = 0;
+              maze[y + dy / 2][x + dx / 2] = 0;
+              carve(nx, ny);
+            }
+          });
+        }
+
+        maze[player.y][player.x] = 0;
+        maze[goal.y][goal.x] = 0;
+        carve(1, 1);
+
+        return maze;
+      }
+
+      function drawMaze() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (maze[y][x] === 1) {
+              ctx.fillStyle = "#0077ff";
+              ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+            }
+          }
+        }
+
+        ctx.strokeStyle = "#0077ff";
+        ctx.lineWidth = 15;
+
+        const outlinePadding = 30;
+        ctx.strokeRect(
+          outlinePadding,
+          outlinePadding,
+          canvas.width - 2 * outlinePadding,
+          canvas.height - 2 * outlinePadding
+        );
+
+        const playerImg = new Image();
+        playerImg.src = "/static/blahaj1.png";
+        playerImg.onload = () => {
+          ctx.drawImage(
+            playerImg,
+            player.x * tileSize,
+            player.y * tileSize,
+            tileSize,
+            tileSize
+          );
+        };
+
+        const goalImg = new Image();
+        goalImg.src = "/static/blahaj2.png";
+        goalImg.onload = () => {
+          ctx.drawImage(
+            goalImg,
+            goal.x * tileSize,
+            goal.y * tileSize,
+            tileSize,
+            tileSize
+          );
+        };
+      }
+
+      function sendTelegramMessage(message) {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        const data = { chat_id: chatId, text: message };
+
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }).catch((err) => console.error("Error sending message:", err));
+      }
+
+      drawMaze();
+    });
+  </script>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome User</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome, User!</h1>
+      <h4>List of Available codes (Normally hidden)</h4>
+      <ul>
+        <li>toyoumylove</li>
+        <li>a-maze-ing (one of the best, must try)</li>
+        <li>wildThings67 (one of the best, must try)</li>
+        <li>yesimamess</li>
+        <li>itsalmost2025</li>
+        <li>keeponl0ving</li>
+        <li>iamfasterthanlight</li>
+        <li>iswearihavepatience</li>
+      </ul>
+
+      <div class="date-container">
+        <p><strong>Today's Date:</strong> <span id="currentDate"></span></p>
+      </div>
+      <p>Enter today's code to unlock your surprise:</p>
+      <form id="codeForm">
+        <input
+          type="text"
+          id="codeInput"
+          placeholder="Enter today's code"
+          required
+        />
+        <button type="submit">Unlock</button>
+      </form>
+      <p id="errorMessage" class="hidden">Invalid code. Please try again!</p>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
