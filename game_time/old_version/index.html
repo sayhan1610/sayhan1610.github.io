@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Find me Santa</title>
+  </head>
+  <body>
+    <div id="modal">
+      <div id="modal-content">
+        <h2>
+          Connecting to Santa's terminal requires temporary access to your IP
+          and device information. Do you wish to proceed?
+        </h2>
+        <img
+          id="santa"
+          src="static/santa.png"
+          alt="Santa"
+          style="position: absolute; display: none"
+        />
+        <audio id="hohoho1" src="static/hohoho.mp3"></audio>
+        <audio id="hohoho2" src="static/hohoho2.mp3"></audio>
+
+        <button id="accept">Hohoho</button>
+        <button id="decline">Nonono</button>
+      </div>
+    </div>
+    <div id="info"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,41 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome User</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="styles.css" />
+    <title>Find me Santa</title>
   </head>
   <body>
-    <div class="container">
-      <h1>Welcome, User!</h1>
-      <h4>List of Available codes (Normally hidden)</h4>
-      <ul>
-        <li>toyoumylove</li>
-        <li>a-maze-ing (one of the best, must try)</li>
-        <li>wildThings67 (one of the best, must try)</li>
-        <li>yesimamess</li>
-        <li>itsalmost2025</li>
-        <li>keeponl0ving</li>
-        <li>iamfasterthanlight</li>
-        <li>iswearihavepatience</li>
-      </ul>
-
-      <div class="date-container">
-        <p><strong>Today's Date:</strong> <span id="currentDate"></span></p>
+    <div id="info">
+      <div class="terminal">
+        <p>🎅 Welcome to <strong>Find Me Santa!</strong></p>
+        <p>Ho ho ho! I see you've been good this year, eh?</p>
+        <p>Here's a festive joke for you:</p>
+        <p><em>Why did Santa go to music school?</em></p>
+        <p>To improve his wrapping skills! 🎁</p>
       </div>
-      <p>Enter today's code to unlock your surprise:</p>
-      <form id="codeForm">
-        <input
-          type="text"
-          id="codeInput"
-          placeholder="Enter today's code"
-          required
-        />
-        <button type="submit">Unlock</button>
-      </form>
-      <p id="errorMessage" class="hidden">Invalid code. Please try again!</p>
+      <div class="terminal">
+        <h3>Holiday Tips:</h3>
+        <ul>
+          <li>🎄 Decorate your space with holiday cheer!</li>
+          <li>
+            🍪 Leave out cookies and milk for Santa (he loves chocolate chip).
+          </li>
+          <li>
+            🛷 Go sledding if there's snow or enjoy some hot cocoa at home!
+          </li>
+        </ul>
+      </div>
+      <div class="terminal">
+        <p>❄️ Enjoy the snowfall and stay cozy! ❄️</p>
+        <p>Santa is watching... so behave! 😜</p>
+      </div>
     </div>
+
+    <div id="info"></div>
     <script src="script.js"></script>
   </body>
 </html>
