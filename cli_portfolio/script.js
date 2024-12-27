@@ -49,7 +49,7 @@ Type 'clear' to clear the terminal.
 
         const fetchDataAndRender = async (page) => {
             try {
-                const response = await fetch(`/pages/${page}.json`);
+                const response = await fetch(`/cli_portfolio/pages/${page}.json`);
                 const data = await response.json();
                 appendOutput(data.content.join('\n'));
             } catch (error) {
