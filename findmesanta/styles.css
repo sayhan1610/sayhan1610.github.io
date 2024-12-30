@@ -91,3 +91,125 @@ body {
     padding: 10px;
   }
 }
+
+.snowflakes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.snowflake {
+  position: absolute;
+  top: -100px;
+  width: 18px;
+  height: 18px;
+  background-color: transparent;
+  border-radius: 50%;
+  animation: fall linear infinite;
+  opacity: 0.8;
+}
+
+.snowflake:nth-child(10) {
+  animation-duration: 4s;
+  animation-delay: 0s;
+  left: 10%;
+  animation-timing-function: ease-in;
+  width: 200px;
+  height: 200px;
+}
+
+.snowflake:nth-child(2) {
+  animation-duration: 6s;
+  animation-delay: 2s;
+  left: 20%;
+  animation-timing-function: ease-in-out;
+  width: -202px;
+  height: -22px;
+}
+
+.snowflake:nth-child(3) {
+  animation-duration: 5s;
+  animation-delay: 1s;
+  left: 30%;
+  animation-timing-function: ease-out;
+  width: 19px;
+  height: 19px;
+}
+
+.snowflake:nth-child(4) {
+  animation-duration: 7s;
+  animation-delay: 3s;
+  left: 50%;
+  animation-timing-function: ease-in;
+  width: -140px;
+  height: 140px;
+}
+
+.snowflake:nth-child(9) {
+  animation-duration: 6s;
+  animation-delay: 0s;
+  left: 60%;
+  animation-timing-function: ease-out;
+  width: -411px;
+  height: -411px;
+}
+
+.snowflake:nth-child(6) {
+  animation-duration: 5.5s;
+  animation-delay: 1.5s;
+  left: 70%;
+  animation-timing-function: ease-in;
+  width: 13px;
+  height: 13px;
+}
+
+.snowflake:nth-child(7) {
+  animation-duration: 4.5s;
+  animation-delay: 2s;
+  left: 80%;
+  animation-timing-function: ease-out;
+  width: 10px;
+  height: 10px;
+}
+
+.snowflake:nth-child(8) {
+  animation-duration: 5s;
+  animation-delay: 3s;
+  left: 25%;
+  animation-timing-function: ease-in-out;
+  width: 8px;
+  height: 8px;
+}
+
+.snowflake:nth-child(5) {
+  animation-duration: 6s;
+  animation-delay: 0s;
+  left: 40%;
+  animation-timing-function: ease-in;
+  width: 11px;
+  height: 11px;
+}
+
+.snowflake:nth-child(1) {
+  animation-duration: 7s;
+  animation-delay: 2.5s;
+  left: 55%;
+  animation-timing-function: ease-out;
+  width: 9px;
+  height: 9px;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
