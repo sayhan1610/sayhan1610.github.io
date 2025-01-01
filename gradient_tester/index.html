@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Easy Gradient Tester</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background"></div>
+    <div class="app-container">
+      <div class="gradient-preview" id="gradientPreview"></div>
+      <div class="controls">
+        <div class="size-control">
+          <label for="gradientSize">Size (px):</label>
+          <input
+            type="number"
+            id="gradientSize"
+            min="100"
+            value="200"
+            step="10"
+          />
+          <span id="gradientSizeValue"></span>
+          <select id="sizeUnit">
+            <option value="px">px</option>
+            <option value="em">em</option>
+            <option value="%">%</option>
+          </select>
+        </div>
+
+        <div class="color-controls">
+          <label>Colors:</label>
+          <div id="colorList"></div>
+          <button id="addColor">Add Color</button>
+        </div>
+
+        <div class="type-control">
+          <label for="gradientType">Type:</label>
+          <select id="gradientType">
+            <option value="linear-gradient">Linear</option>
+            <option value="radial-gradient">Radial</option>
+            <option value="conic-gradient">Conic</option>
+          </select>
+        </div>
+
+        <div id="gradientOptions">
+          <div id="linearOptions" class="options">
+            <label for="angle">Angle:</label>
+            <input type="range" id="angle" min="0" max="360" value="90" />
+            <span id="angleValue">90°</span>
+          </div>
+
+          <div id="radialOptions" class="options hidden">
+            <label for="radialShape">Shape:</label>
+            <select id="radialShape">
+              <option value="ellipse">Ellipse</option>
+              <option value="circle">Circle</option>
+            </select>
+            <label for="radialPosition">Position:</label>
+            <select id="radialPosition">
+              <option value="center">Center</option>
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+
+          <div id="conicOptions" class="options hidden">
+            <label for="conicPosition">Position:</label>
+            <select id="conicPosition">
+              <option value="center">Center</option>
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+        </div>
+        <button id="copyCode">Copy Code</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
