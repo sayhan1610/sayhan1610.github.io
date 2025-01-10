@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gullible Toy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="shape"></div>
+    <input
+      id="command-input"
+      type="text"
+      placeholder="Enter command (e.g., shape;background-color=red)"
+    />
+    <button id="execute-button">Execute</button>
+    <button id="instructions-button">Instructions</button>
+    <div id="command-dropdown-container">
+      <button id="dropdown-button">I'm a noob</button>
+      <div id="command-list" style="display: none"></div>
+    </div>
+    <script>
+      const instructionsButton = document.getElementById("instructions-button");
+      instructionsButton.addEventListener("click", () => {
+        window.location.href = "instructions.html";
+      });
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
