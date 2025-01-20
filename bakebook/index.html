@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>BakeBook</title>
+  </head>
+  <body>
+    <div class="title">👨‍🍳 BakeBook 👩‍🍳</div>
+    <button id="load-recipes" class="button">Load Recipes</button>
+    <button id="submit-recipe" class="button">Submit New Recipe</button>
+    <div id="recipes-container" class="container hidden"></div>
+    <div id="recipe-details" class="container hidden"></div>
+    <div id="submit-form" class="container hidden">
+      <h2>Submit a New Recipe</h2>
+      <form>
+        <label for="recipe-name">Name:</label>
+        <input type="text" id="recipe-name" required />
+
+        <label for="recipe-description">Description:</label>
+        <textarea id="recipe-description" rows="3" required></textarea>
+
+        <label for="recipe-ingredients">Ingredients (comma-separated):</label>
+        <input type="text" id="recipe-ingredients" required />
+
+        <label for="recipe-procedure">Procedure:</label>
+        <textarea id="recipe-procedure" rows="5" required></textarea>
+
+        <label for="recipe-hardness">Hardness (1-10):</label>
+        <input type="number" id="recipe-hardness" min="1" max="10" required />
+
+        <button type="submit" class="button submit-button">Submit</button>
+      </form>
+      <p id="form-response"></p>
+    </div>
+    <button id="back-button" class="button back-button hidden">Back</button>
+    <script src="script.js"></script>
+  </body>
+  <footer class="footer">
+    Made with 🍰 for RaspAPI/HackClub | Click
+    <a href="https://bakebook-xn4v.onrender.com/docs" target="_blank"
+      ><u>here</u></a
+    >
+    for API.
+  </footer>
+</html>

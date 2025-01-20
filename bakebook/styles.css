@@ -1,0 +1,151 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Patrick Hand", cursive, sans-serif;
+  background-color: #fff8e1;
+  overflow-x: hidden;
+  position: relative;
+  margin: 25px 25px;
+}
+
+.emoji {
+  position: fixed;
+  font-size: 24px;
+  animation: fall linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-500px) rotate(0deg);
+    opacity: 0;
+  }
+  90% {
+    transform: translateY(90vh) rotate(324deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.container {
+  align-self: center;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid #ffa726;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-wrap: break-word;
+  z-index: 1;
+  margin-bottom: 50px;
+}
+
+.title {
+  text-align: center;
+  color: #ff7043;
+  font-size: 2.5em;
+  margin-top: 20px;
+}
+
+.button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  color: white;
+  background-color: #ffa726;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  background-color: #fb8c00;
+}
+
+.hidden {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #ffe0b2;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+li:hover {
+  background-color: #ffd54f;
+}
+
+.back-button {
+  margin-top: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 10px 0 5px;
+}
+
+input,
+textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.submit-button {
+  align-self: flex-start;
+}
+
+#form-response {
+  margin-top: 20px;
+  color: lime;
+}
+
+.footer {
+  text-align: center;
+  left: 0;
+  bottom: 0;
+  padding: 10px;
+  background-color: #ffe0b2;
+  color: #ff7043;
+  font-size: 1em;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer a {
+  color: #fb8c00;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
