@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A Day in Luco’s Life</title>
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Fredoka", sans-serif;
+        background: linear-gradient(to bottom, #ade8f4, #d0f4ff);
+        margin: 0;
+        padding: 0;
+        color: #03045e;
+      }
+
+      header {
+        background: #0077b6;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2.2rem;
+      }
+
+      .timeline {
+        padding: 2em;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .event {
+        display: flex;
+        align-items: flex-start;
+        background: #ffffffcc;
+        border-left: 5px solid #0096c7;
+        margin-bottom: 2em;
+        padding: 1em;
+        border-radius: 10px;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .event:hover {
+        transform: scale(1.02);
+      }
+
+      .event img:hover {
+        transform: rotate(5deg);
+        transition: transform 0.2s ease-in-out;
+      }
+      .event img:active {
+        transform: scale(5);
+      }
+      .event img {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        margin-right: 1em;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .event .text {
+        /* so text wraps nicely */
+        flex: 1;
+      }
+
+      .time {
+        font-weight: bold;
+        color: #0077b6;
+        margin: 0 0 0.4em 0;
+      }
+
+      .event:nth-child(odd) {
+        background-color: #caf0f8;
+      }
+
+      ul {
+        list-style-type: 🦈;
+        padding-left: 2em;
+      }
+
+      footer {
+        background-color: #023e8a;
+        color: white;
+        text-align: center;
+        padding: 5px;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+      }
+      a {
+        color: #caf0f8;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>A Day in the Life of Luco 🦈</h1>
+      <p>Yes, sharks have routines. Deal with it.</p>
+    </header>
+
+    <div class="timeline">
+      <div class="event">
+        <img src="images/wakeup.jpeg" alt="Waking up Luco" />
+        <div class="text">
+          <p class="time">08:00</p>
+          <p>
+            Wakes up dramatically, sighs like a telenovela character, and rolls
+            off the bed to begin the grind.
+          </p>
+        </div>
+      </div>
+
+      <div class="event">
+        <img src="images/sunbath.jpeg" alt="Sunbathing Luco" />
+        <div class="text">
+          <p class="time">09:30</p>
+          <p>Sunbathes on the windowsill. Claims it’s “vitamin SEA.” ☀️</p>
+        </div>
+      </div>
+
+      <div class="event">
+        <img src="images/study.jpeg" alt="Studying Luco" />
+        <div class="text">
+          <p class="time">11:00</p>
+          <p>
+            Studies IB physics with Sayhan. Provides moral support by existing.
+          </p>
+        </div>
+      </div>
+
+      <div class="event">
+        <img src="images/snack.png" alt="Snack time" />
+        <div class="text">
+          <p class="time">14:00</p>
+          <p>
+            Eats snacks (mainly imaginary fish crackers). Prepares for nap #1.
+          </p>
+        </div>
+      </div>
+
+      <div class="event">
+        <img src="images/voyage.jpeg" alt="Voyage" />
+        <div class="text">
+          <p class="time">16:00</p>
+          <p>
+            Goes for an exploration voyage (also known as crawling under the
+            bed).
+          </p>
+        </div>
+      </div>
+
+      <div class="event">
+        <img src="images/chill.jpeg" alt="Chilling with Jigu" />
+        <div class="text">
+          <p class="time">20:00</p>
+          <p>
+            Chills with Jigu, watches anime, questions existence, sleeps again.
+            💤
+          </p>
+        </div>
+      </div>
+
+      <h2>Luco’s Essentials</h2>
+      <ul>
+        <li>One loyal duck friend 🦆</li>
+        <li>One chaotic human named Sayhan 🧠</li>
+        <li>Snacks (real or imagined)</li>
+        <li>Nap time. Always nap time.</li>
+      </ul>
+    </div>
+
+    <br /><br /><br />
+
+    <footer>
+      <p>
+        Luco approved this message 🦈💙 |
+        <a href="https://sayhan.hackclub.app/">Contact Luco's Dad</a> |
+        <a href="https://github.com/sayhan1610/luco">GitHub Repo</a> |
+        <a href="adventures.html">Next: Luco’s Adventures</a>
+      </p>
+    </footer>
+  </body>
+</html>

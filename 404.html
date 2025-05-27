@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 | Luco’s Underworld</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --light-bg: #caf0f8;
+        --light-text: #023e8a;
+        --accent: #48cae4;
+      }
+
+      body {
+        font-family: "Fredoka", sans-serif;
+        background: var(--light-bg);
+        color: var(--light-text);
+        margin: 0;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .container {
+        background: var(--light-bg);
+        min-height: 100vh;
+        padding: 2rem;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        font-size: 3rem;
+        user-select: none;
+      }
+
+      /* Shark fin styling */
+      .shark-fin {
+        position: fixed;
+        width: 60px;
+        height: 40px;
+        background: #0077b6;
+        clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        opacity: 0.7;
+        animation: sharkPop 6s infinite ease-in-out;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        z-index: 999;
+      }
+      .shark-fin:nth-child(1) {
+        top: 80vh;
+        left: 10vw;
+        animation-delay: 0s;
+      }
+      .shark-fin:nth-child(2) {
+        top: 70vh;
+        left: 80vw;
+        animation-delay: 2s;
+      }
+      .shark-fin:nth-child(3) {
+        top: 75vh;
+        left: 45vw;
+        animation-delay: 4s;
+      }
+
+      @keyframes sharkPop {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-15px) rotate(15deg);
+          opacity: 1;
+        }
+      }
+      .shark-fin:hover {
+        transform: translateY(-20px) rotate(45deg) scale(1.2);
+        opacity: 1;
+      }
+
+      /* The confetti button wrapped in a link */
+      a.confetti-button {
+        display: block;
+        margin: 2rem auto;
+        max-width: 600px;
+        padding: 1.5rem 2rem;
+        border: 2px dashed var(--accent);
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 1.25rem;
+        text-align: center;
+        color: var(--light-text);
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: visible; /* So confetti can go outside */
+        user-select: none;
+        transition: background 0.4s ease, color 0.4s ease;
+        z-index: 1;
+      }
+
+      a.confetti-button:hover {
+        background: var(--accent);
+        color: var(--light-bg);
+      }
+
+      /* Confetti particles container */
+      .confetti {
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: visible;
+        z-index: 0;
+      }
+
+      /* Individual confetti piece */
+      .confetti-piece {
+        position: absolute;
+        font-size: 1.5rem;
+        opacity: 0;
+        animation-name: confetti-fall;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+      }
+
+      /* Different confetti characters */
+      .confetti-piece:nth-child(1) {
+        content: "🎉";
+      }
+      .confetti-piece:nth-child(2) {
+        content: "✨";
+      }
+      .confetti-piece:nth-child(3) {
+        content: "🐟";
+      }
+      .confetti-piece:nth-child(4) {
+        content: "🦈";
+      }
+      .confetti-piece:nth-child(5) {
+        content: "🐥";
+      }
+
+      /* Instead of content property, we'll put these inside the element */
+
+      /* Animation: confetti falls from top to bottom with side drifting */
+      @keyframes confetti-fall {
+        0% {
+          opacity: 1;
+          transform: translateY(0) translateX(0) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(150vh) translateX(50px) rotate(360deg);
+        }
+      }
+
+      /* We'll make multiple confetti pieces with different delays and positions via inline styles */
+
+      p.description {
+        max-width: 600px;
+        margin: 1rem auto;
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+
+      footer {
+        margin-top: 3rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--accent);
+        user-select: none;
+      }
+      @keyframes fallSpin {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(120vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        This page doesn’t exist—beware, you’re drifting closer to the dreaded
+        Bermuda Triangle where lost links vanish forever! 🌪️⛵🕳️
+      </h1>
+
+      <p class="description">
+        You’ve wandered deep into the uncharted waters of the internet, lost
+        among the tempests ruled by the fearsome Gods of the 7 Seas. Now, you’re
+        on your knees, praying to Poseidon, Njord, and all the wild sea deities
+        to cast you back to safe shores—before you become a snack for their
+        ravenous digital krakens.
+      </p>
+      <a
+        href="/"
+        class="confetti-button"
+        aria-label="Go back home with a confetti burst"
+      >
+        Click to pay respect to the gods of the 7 seas and head back home!
+      </a>
+    </div>
+
+    <!-- Shark fins as fixed elements -->
+    <div class="shark-fin" title="Shark fin surprise!"></div>
+    <div class="shark-fin" title="Shark fin surprise!"></div>
+    <div class="shark-fin" title="Shark fin surprise!"></div>
+
+    <!-- Confetti pieces sprinkled across the page -->
+    <div class="confetti" aria-hidden="true">
+      <div
+        class="confetti-piece"
+        style="
+          top: 10vh;
+          left: 10vw;
+          animation-duration: 3s;
+          animation-delay: 0s;
+        "
+      >
+        🎉
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 5vh;
+          left: 20vw;
+          animation-duration: 4s;
+          animation-delay: 0.3s;
+        "
+      >
+        ✨
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 15vh;
+          left: 30vw;
+          animation-duration: 3.5s;
+          animation-delay: 0.6s;
+        "
+      >
+        🐟
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 8vh;
+          left: 40vw;
+          animation-duration: 4.2s;
+          animation-delay: 0.9s;
+        "
+      >
+        🦈
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 12vh;
+          left: 50vw;
+          animation-duration: 3.8s;
+          animation-delay: 1.2s;
+        "
+      >
+        🐥
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 7vh;
+          left: 60vw;
+          animation-duration: 3.3s;
+          animation-delay: 1.5s;
+        "
+      >
+        🎉
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 10vh;
+          left: 70vw;
+          animation-duration: 4.1s;
+          animation-delay: 1.8s;
+        "
+      >
+        ✨
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 14vh;
+          left: 80vw;
+          animation-duration: 3.7s;
+          animation-delay: 2.1s;
+        "
+      >
+        🐟
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 9vh;
+          left: 90vw;
+          animation-duration: 3.9s;
+          animation-delay: 2.4s;
+        "
+      >
+        🦈
+      </div>
+      <div
+        class="confetti-piece"
+        style="
+          top: 13vh;
+          left: 95vw;
+          animation-duration: 4s;
+          animation-delay: 2.7s;
+        "
+      >
+        🐥
+      </div>
+    </div>
+    <script>
+      const imageSources = [
+        "images/chill.JPEG",
+        "images/dad.png",
+        "images/homecoming.png",
+        "images/jigu.png",
+        "images/luco.jpg",
+        "images/metro.JPEG",
+        "images/mom.png",
+        "images/pi.JPEG",
+        "images/shina.png",
+        "images/snack.png",
+        "images/study.JPEG",
+        "images/voyage.JPEG",
+        "images/sunbath.jpeg",
+      ];
+
+      function dropImageRain() {
+        const img = document.createElement("img");
+        img.src = imageSources[Math.floor(Math.random() * imageSources.length)];
+        img.style.position = "fixed";
+        img.style.top = "-100px";
+        img.style.left = Math.random() * 100 + "vw";
+        const size = Math.random() * 50 + 30;
+        img.style.width = size + "px";
+        img.style.pointerEvents = "none";
+        img.style.zIndex = 998;
+        img.style.transform = `rotate(${Math.random() * 360}deg)`;
+        img.style.animation = `fallSpin ${
+          Math.random() * 4 + 3
+        }s linear forwards`;
+
+        document.body.appendChild(img);
+        setTimeout(() => img.remove(), 10000); // clean-up after 10s
+      }
+
+      document.querySelectorAll(".shark-fin").forEach((fin) => {
+        fin.addEventListener(
+          "click",
+          () => {
+            setInterval(dropImageRain, 200); // nonstop rain
+          },
+          { once: true }
+        );
+      });
+    </script>
+  </body>
+</html>
