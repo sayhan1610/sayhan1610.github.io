@@ -1,223 +1,515 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meet Luco 🦈</title>
-    <link rel="icon" type="image/png" href="/favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Fredoka", sans-serif;
-        background: linear-gradient(to bottom, #b3e0ff, #e0f7ff);
-        margin: 0;
-        overflow-x: hidden;
-      }
 
-      header {
-        background: #0077b6;
-        color: white;
-        padding: 10px;
-        text-align: center;
-      }
+<head>
 
-      h1 {
-        margin: 0;
-        font-size: 2.5rem;
-      }
+  <meta charset="UTF-8">
 
-      .content {
-        padding: 2em;
-        text-align: center;
-      }
+  <meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1,
+             maximum-scale=1,
+             user-scalable=no"
+  >
 
-      .bubbles {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        overflow: hidden;
-      }
+  <title>MavCARD Check-In</title>
 
-      .bubble {
-        position: absolute;
-        bottom: -100px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 50%;
-        animation: rise 10s infinite ease-in;
-      }
+  <script src="https://unpkg.com/html5-qrcode"></script>
 
-      .bubble:nth-child(1) {
-        width: 30px;
-        height: 30px;
-        left: 10%;
-        animation-duration: 12s;
-      }
-      .bubble:nth-child(2) {
-        width: 20px;
-        height: 20px;
-        left: 25%;
-        animation-duration: 10s;
-      }
-      .bubble:nth-child(3) {
-        width: 25px;
-        height: 25px;
-        left: 40%;
-        animation-duration: 8s;
-      }
-      .bubble:nth-child(4) {
-        width: 15px;
-        height: 15px;
-        left: 60%;
-        animation-duration: 11s;
-      }
-      .bubble:nth-child(5) {
-        width: 20px;
-        height: 20px;
-        left: 80%;
-        animation-duration: 9s;
-      }
+  <style>
 
-      @keyframes rise {
-        0% {
-          transform: translateY(0);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(-100vh);
-          opacity: 0;
-        }
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      footer {
-        background-color: #023e8a;
-        color: white;
-        text-align: center;
-        padding: 5px;
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-      }
+    body {
+      margin: 0;
+      min-height: 100vh;
 
-      a {
-        color: #caf0f8;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-      button {
-        background-color: #0096c7;
-        border: none;
-        padding: 0.7em 1.2em;
-        color: white;
-        border-radius: 10px;
-        font-size: 1em;
-        cursor: pointer;
-        margin-top: 1em;
-      }
+      background: #111827;
+      color: white;
 
-      button:hover {
-        background-color: #00b4d8;
-      }
-      .tooltip {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted #0096c7;
-      }
+      display: flex;
+      justify-content: center;
+    }
 
-      .tooltip .tooltiptext {
-        visibility: hidden;
-        width: auto;
-        min-width: 500px;
-        background-color: #0095c7be;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        position: absolute;
-        z-index: 1;
-      }
-      .tooltip:hover .tooltiptext {
-        visibility: visible;
-      }
+    .container {
+      width: 100%;
+      max-width: 600px;
 
-      img {
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        margin-top: 1em;
-        transition: transform 0.3s ease;
-        height: auto;
-        width: 200px;
-      }
-      img:hover {
-        transform: scale(1.05);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="bubbles">
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
-      <div class="bubble"></div>
+      padding: 20px;
+
+      text-align: center;
+    }
+
+    h1 {
+      margin: 10px 0 5px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 500px;
+
+      margin: 0 auto;
+
+      border-radius: 18px;
+      overflow: hidden;
+
+      background: black;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 22px;
+
+      border-radius: 18px;
+
+      display: none;
+    }
+
+    #result.success {
+      display: block;
+      background: #064e3b;
+      border: 2px solid #10b981;
+    }
+
+    #result.duplicate {
+      display: block;
+      background: #7f1d1d;
+      border: 2px solid #ef4444;
+    }
+
+    #result.error {
+      display: block;
+      background: #78350f;
+      border: 2px solid #f59e0b;
+    }
+
+    .result-title {
+      font-size: 25px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .barcode {
+      font-family: monospace;
+      font-size: 19px;
+
+      word-break: break-all;
+    }
+
+    .time {
+      margin-top: 8px;
+      color: #d1d5db;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+
+      padding: 16px;
+
+      border: none;
+      border-radius: 14px;
+
+      background: #2563eb;
+      color: white;
+
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .status {
+      margin-top: 15px;
+
+      color: #9ca3af;
+
+      font-size: 14px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="container">
+
+    <h1>📇 MavCARD Check-In</h1>
+
+    <div class="subtitle">
+      Scan the barcode on the back of the MavCARD
     </div>
 
-    <header>
-      <h1>Meet Luco 🦈</h1>
-      <p>Your favorite IKEA shonk is now a star!</p>
-    </header>
+    <div id="reader"></div>
 
-    <div class="content">
-      <img
-        loading="lazy"
-        src="/images/luco.jpg"
-        alt="Luco the Blåhaj"
-        width="300"
-      />
-      <h2>Who is Luco the Blåhaj?</h2>
-      <p>
-        Luco is not just any plushie. He’s the ultimate adventure buddy, study
-        pal, and drama queen of the sea.
-      </p>
+    <div id="result"></div>
 
-      <p>
-        From long metro rides to Hack Club chaos, Luco’s seen it all and napped
-        through most of it. 💤
-      </p>
-      <p>Fun fact: Luco once beat a human (me) in a staring contest. Twice.</p>
-      <p class="tooltip">
-        What is a Blåhaj?
-        <span class="tooltiptext"
-          >Shark good and soft to hold. Fantastic object! very Squish for hug
-          the shark... with very Soft and Comfort human sleep soundly with
-          blåhaj snuggle. Snuggle Blåhaj Always. no sad feels ever with blåhaj
-          because good Shape and Support for human heart weak of big emotion
-          feels. Ablåhaj yes a friend for a human can trust blåhaj for giveing
-          good love to lonely person. share secrets with shark friend, never
-          tell! most good listener in whole sea and land. Also makes girl better
-          at software engineering. warm soft helpful companion! friend Shark.
-          (Description from Arcade Shop)</span
-        >
-      </p>
-      <br />
-      <a href="day.html"><button>See a Day in Luco's Life</button></a>
+    <button
+      id="restart"
+      onclick="restartScanner()"
+      style="display:none;"
+    >
+      Scan Next Card
+    </button>
+
+    <div
+      class="status"
+      id="status"
+    >
+      Starting camera...
     </div>
 
-    <footer>
-      <p>
-        Made with 💙 for Swirl 🍦|
-        <a href="https://sayhan.hackclub.app/">Contact Luco's Dad</a> |
-        <a href="https://github.com/sayhan1610/luco">GitHub Repo</a>
-      </p>
-    </footer>
-  </body>
+  </div>
+
+
+<script>
+
+  // =====================================================
+  // PUT YOUR GOOGLE APPS SCRIPT /exec URL HERE
+  // =====================================================
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbzmcB48boLtRRmLafZzvT4Np8dM0esh0AVOk1mFGCqAgCtrjXm9xEEGp7ZXCyTg9nQM/exec";
+
+
+  let scanner = null;
+  let scanning = false;
+  let processing = false;
+
+
+  // -----------------------------------------------------
+  // START CAMERA
+  // -----------------------------------------------------
+
+  function startScanner() {
+
+    scanner = new Html5Qrcode("reader");
+
+    scanner.start(
+
+      {
+        facingMode: "environment"
+      },
+
+      {
+        fps: 10,
+
+        qrbox: {
+          width: 320,
+          height: 160
+        },
+
+        formatsToSupport: [
+
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.ITF
+
+        ]
+
+      },
+
+      onScanSuccess,
+
+      onScanFailure
+
+    )
+
+    .then(() => {
+
+      scanning = true;
+
+      document.getElementById("status")
+        .textContent =
+        "Camera ready • Scan a MavCARD";
+
+    })
+
+    .catch(error => {
+
+      document.getElementById("status")
+        .textContent =
+        "Camera error: " + error;
+
+    });
+
+  }
+
+
+  // -----------------------------------------------------
+  // BARCODE SCANNED
+  // -----------------------------------------------------
+
+  function onScanSuccess(decodedText) {
+
+    if (!scanning || processing) {
+      return;
+    }
+
+    processing = true;
+
+    scanner.stop()
+      .then(() => {
+
+        scanning = false;
+
+        document.getElementById("status")
+          .textContent =
+          "Checking barcode...";
+
+        checkBarcode(decodedText);
+
+      });
+
+  }
+
+
+  function onScanFailure(error) {
+    // Normal scanning failures are ignored.
+  }
+
+
+  // -----------------------------------------------------
+  // SEND BARCODE TO GOOGLE APPS SCRIPT
+  // -----------------------------------------------------
+
+  function checkBarcode(barcode) {
+
+    const callbackName =
+      "callback_" + Date.now();
+
+    window[callbackName] =
+      function(result) {
+
+        handleResult(result);
+
+        delete window[callbackName];
+
+        script.remove();
+
+      };
+
+
+    const script =
+      document.createElement("script");
+
+    script.src =
+      API_URL +
+      "?barcode=" +
+      encodeURIComponent(barcode) +
+      "&callback=" +
+      callbackName;
+
+
+    script.onerror =
+      function() {
+
+        delete window[callbackName];
+
+        script.remove();
+
+        handleError();
+
+      };
+
+
+    document.body.appendChild(script);
+
+  }
+
+
+  // -----------------------------------------------------
+  // HANDLE GOOGLE RESPONSE
+  // -----------------------------------------------------
+
+  function handleResult(result) {
+
+    const box =
+      document.getElementById("result");
+
+    box.className = "";
+
+    box.style.display = "block";
+
+
+    if (result.success) {
+
+      box.classList.add("success");
+
+      box.innerHTML = `
+
+        <div class="result-title">
+          ✅ CHECK-IN SUCCESSFUL
+        </div>
+
+        <div class="barcode">
+          ${escapeHtml(result.barcode)}
+        </div>
+
+        <div class="time">
+          ${escapeHtml(result.time)}
+        </div>
+
+      `;
+
+    }
+
+    else if (result.duplicate) {
+
+      box.classList.add("duplicate");
+
+      box.innerHTML = `
+
+        <div class="result-title">
+          ⚠️ ALREADY SCANNED
+        </div>
+
+        <div class="barcode">
+          ${escapeHtml(result.barcode)}
+        </div>
+
+        <div class="time">
+          Original check-in:
+          ${escapeHtml(result.previousTime)}
+        </div>
+
+      `;
+
+    }
+
+    else {
+
+      box.classList.add("error");
+
+      box.innerHTML = `
+
+        <div class="result-title">
+          ⚠️ ERROR
+        </div>
+
+        <div>
+          ${escapeHtml(result.message)}
+        </div>
+
+      `;
+
+    }
+
+
+    document.getElementById("restart")
+      .style.display = "block";
+
+    processing = false;
+
+  }
+
+
+  // -----------------------------------------------------
+  // ERROR
+  // -----------------------------------------------------
+
+  function handleError() {
+
+    const box =
+      document.getElementById("result");
+
+    box.className = "error";
+
+    box.style.display = "block";
+
+    box.innerHTML = `
+
+      <div class="result-title">
+        ⚠️ CONNECTION ERROR
+      </div>
+
+      <div>
+        Could not contact the check-in system.
+        Please try again.
+      </div>
+
+    `;
+
+
+    document.getElementById("restart")
+      .style.display = "block";
+
+    processing = false;
+
+  }
+
+
+  // -----------------------------------------------------
+  // RESTART
+  // -----------------------------------------------------
+
+  function restartScanner() {
+
+    document.getElementById("result")
+      .style.display = "none";
+
+    document.getElementById("restart")
+      .style.display = "none";
+
+    document.getElementById("status")
+      .textContent =
+      "Starting camera...";
+
+    processing = false;
+
+    startScanner();
+
+  }
+
+
+  // -----------------------------------------------------
+  // BASIC HTML SAFETY
+  // -----------------------------------------------------
+
+  function escapeHtml(text) {
+
+    const div =
+      document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+  }
+
+
+  // -----------------------------------------------------
+  // START
+  // -----------------------------------------------------
+
+  window.onload = startScanner;
+
+</script>
+
+</body>
+
 </html>
