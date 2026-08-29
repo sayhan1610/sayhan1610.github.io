@@ -2,11 +2,15 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    content="width=device-width,
+             initial-scale=1,
+             maximum-scale=1,
+             user-scalable=no"
   >
 
   <title>MavCARD Check-In</title>
@@ -30,6 +34,7 @@
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        Roboto,
         Arial,
         sans-serif;
 
@@ -45,7 +50,7 @@
     }
 
     h1 {
-      margin: 8px 0 5px;
+      margin: 8px 0 4px;
       font-size: 28px;
       font-weight: 800;
     }
@@ -56,93 +61,40 @@
       font-size: 15px;
     }
 
-    .camera-container {
-      position: relative;
-
+    #reader {
       width: 100%;
-
-      background: black;
-
-      border-radius: 20px;
+      max-width: 550px;
+      margin: auto;
 
       overflow: hidden;
+
+      border-radius: 18px;
+
+      background: black;
     }
 
-    video {
-      display: block;
+    /*
+     * Hide the library's own text/buttons.
+     * We want our own clean interface.
+     */
 
-      width: 100%;
-
-      aspect-ratio: 4 / 3;
-
-      object-fit: cover;
+    #reader__dashboard {
+      display: none !important;
     }
 
-    .scan-guide {
-      position: absolute;
-
-      left: 5%;
-      right: 5%;
-
-      top: 32%;
-      height: 36%;
-
-      border: 3px solid white;
-
-      border-radius: 12px;
-
-      pointer-events: none;
-
-      box-shadow:
-        0 0 0 9999px rgba(0, 0, 0, 0.15);
+    #reader__scan_region {
+      background: black !important;
     }
 
-    .scan-line {
-      position: absolute;
-
-      left: 5%;
-      right: 5%;
-
-      top: 50%;
-
-      height: 2px;
-
-      background: white;
-
-      opacity: .8;
-    }
-
-    #scanButton {
-      width: 100%;
-
-      margin-top: 18px;
-
-      padding: 18px;
-
-      border: none;
-
-      border-radius: 16px;
-
-      background: #2563eb;
-
-      color: white;
-
-      font-size: 21px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-    }
-
-    #scanButton:disabled {
-      background: #374151;
-      color: #9ca3af;
+    #reader__scan_region video {
+      width: 100% !important;
+      border-radius: 18px;
     }
 
     #status {
-      margin-top: 12px;
+      margin-top: 14px;
 
-      min-height: 20px;
+      min-height: 22px;
 
       color: #9ca3af;
 
@@ -185,7 +137,6 @@
 
     .result-title {
       font-size: 26px;
-
       font-weight: 900;
 
       margin-bottom: 12px;
@@ -193,7 +144,6 @@
 
     .barcode {
       font-family: monospace;
-
       font-size: 20px;
 
       word-break: break-all;
@@ -212,19 +162,19 @@
 
       margin-top: 14px;
 
-      padding: 16px;
+      padding: 17px;
 
       border: none;
 
       border-radius: 14px;
 
-      background: #374151;
+      background: #2563eb;
 
       color: white;
 
-      font-size: 18px;
+      font-size: 19px;
 
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .manual {
@@ -265,6 +215,8 @@
       color: white;
 
       font-size: 17px;
+
+      outline: none;
     }
 
     #manualButton {
@@ -283,6 +235,11 @@
       font-size: 16px;
     }
 
+    #manualButton:active,
+    #nextButton:active {
+      transform: scale(.98);
+    }
+
   </style>
 
 </head>
@@ -295,33 +252,13 @@
   <h1>📇 MavCARD Check-In</h1>
 
   <div class="subtitle">
-    Center the Codabar barcode and press Scan
+    Point the camera at the barcode
   </div>
 
 
-  <div class="camera-container">
+  <!-- CAMERA -->
 
-    <video
-      id="camera"
-      autoplay
-      playsinline
-      muted
-    ></video>
-
-    <div class="scan-guide">
-      <div class="scan-line"></div>
-    </div>
-
-  </div>
-
-
-  <button
-    id="scanButton"
-    onclick="scanCurrentFrame()"
-    disabled
-  >
-    📸 SCAN BARCODE
-  </button>
+  <div id="reader"></div>
 
 
   <div id="status">
@@ -329,21 +266,27 @@
   </div>
 
 
+  <!-- RESULT -->
+
   <div id="result"></div>
 
 
+  <!-- NEXT CARD -->
+
   <button
     id="nextButton"
-    onclick="resetScanner()"
+    onclick="startNextScan()"
   >
-    📸 SCAN NEXT CARD
+    📷 SCAN NEXT CARD
   </button>
 
+
+  <!-- MANUAL ENTRY -->
 
   <div class="manual">
 
     <div class="manual-title">
-      Barcode won't scan? Enter it manually.
+      Can't scan? Enter the barcode manually.
     </div>
 
     <div class="manual-row">
@@ -351,8 +294,8 @@
       <input
         id="manualInput"
         type="text"
-        inputmode="text"
-        placeholder="Barcode"
+        inputmode="numeric"
+        placeholder="Barcode number"
         autocomplete="off"
       >
 
@@ -374,116 +317,149 @@
 
   /*
    * =====================================================
-   * GOOGLE APPS SCRIPT URL
+   * GOOGLE APPS SCRIPT ENDPOINT
    * =====================================================
+   *
+   * PUT YOUR /exec URL HERE.
    */
 
   const API_URL =
-    "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
+    "https://script.google.com/macros/s/AKfycbyx9oD0IOgvN-naQz1KHrmBqItZzTIO2E61skzGIRSTqSl1Yxh4ooaFi5aXw6IrQSzi/exec";
 
 
   /*
    * =====================================================
-   * VARIABLES
+   * SCANNER
    * =====================================================
    */
 
-  const video =
-    document.getElementById("camera");
-
-  const scanButton =
-    document.getElementById("scanButton");
-
-  const status =
-    document.getElementById("status");
-
-  const result =
-    document.getElementById("result");
-
-  const nextButton =
-    document.getElementById("nextButton");
-
-
-  let cameraStream = null;
+  let scanner = null;
 
   let processing = false;
 
 
   /*
    * =====================================================
-   * START CAMERA
+   * START SCANNER
    * =====================================================
    */
 
-  async function startCamera() {
+  function startScanner() {
 
-    try {
-
-      status.textContent =
-        "Requesting camera...";
-
-
-      cameraStream =
-        await navigator.mediaDevices.getUserMedia({
-
-          video: {
-
-            facingMode: {
-              ideal: "environment"
-            },
-
-            width: {
-              ideal: 1920
-            },
-
-            height: {
-              ideal: 1080
-            }
-
-          },
-
-          audio: false
-
-        });
+    scanner =
+      new Html5Qrcode(
+        "reader"
+      );
 
 
-      video.srcObject =
-        cameraStream;
+    /*
+     * Explicitly prioritize Codabar.
+     */
+
+    const config = {
+
+      fps: 10,
+
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
+
+        /*
+         * Codabar is wide and short,
+         * so give it a wide scanning box.
+         */
+
+        const width =
+          Math.min(
+            viewfinderWidth * 0.90,
+            500
+          );
+
+        const height =
+          Math.min(
+            viewfinderHeight * 0.35,
+            180
+          );
+
+        return {
+          width: width,
+          height: height
+        };
+
+      },
+
+      formatsToSupport: [
+
+        Html5QrcodeSupportedFormats.CODABAR
+
+      ]
+
+    };
 
 
-      await video.play();
+    scanner.start(
 
+      {
+        facingMode: {
+          ideal: "environment"
+        }
+      },
 
-      scanButton.disabled =
-        false;
+      config,
 
+      function(decodedText) {
 
-      status.textContent =
+        handleScan(
+          decodedText
+        );
+
+      },
+
+      function(errorMessage) {
+
+        /*
+         * Normal scanning failures are ignored.
+         */
+
+      }
+
+    )
+
+    .then(() => {
+
+      document.getElementById(
+        "status"
+      ).textContent =
         "Camera ready • Center the barcode";
 
 
-    }
+    })
 
-    catch (error) {
+    .catch(error => {
 
       console.error(error);
 
-      status.textContent =
+      document.getElementById(
+        "status"
+      ).textContent =
         "Camera error: " +
-        error.message;
+        error;
 
-    }
+    });
 
   }
 
 
   /*
    * =====================================================
-   * CAPTURE + CODABAR SCAN
+   * BARCODE FOUND
    * =====================================================
    */
 
-  async function scanCurrentFrame() {
+  function handleScan(
+    barcode
+  ) {
 
     if (processing) {
       return;
@@ -492,178 +468,31 @@
 
     processing = true;
 
-    scanButton.disabled =
-      true;
-
-
-    status.textContent =
-      "📸 Capturing barcode...";
-
 
     /*
-     * Create a canvas containing the
-     * current camera frame.
+     * Stop the camera immediately.
+     *
+     * This prevents the same barcode
+     * from being submitted multiple times.
      */
 
-    const canvas =
-      document.createElement("canvas");
+    if (scanner) {
+
+      scanner
+        .stop()
+        .catch(() => {});
+
+    }
 
 
-    canvas.width =
-      video.videoWidth;
-
-    canvas.height =
-      video.videoHeight;
-
-
-    const context =
-      canvas.getContext("2d");
+    document.getElementById(
+      "status"
+    ).textContent =
+      "Barcode found • Checking...";
 
 
-    context.drawImage(
-      video,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-
-    /*
-     * Convert the captured image to
-     * a JPEG file.
-     */
-
-    canvas.toBlob(
-
-      async function(blob) {
-
-        if (!blob) {
-
-          scanFailed();
-
-          return;
-
-        }
-
-
-        status.textContent =
-          "🔎 Reading Codabar...";
-
-
-        const file =
-          new File(
-            [blob],
-            "mavcard.jpg",
-            {
-              type: "image/jpeg"
-            }
-          );
-
-
-        /*
-         * Create temporary scanner element.
-         */
-
-        const element =
-          document.createElement("div");
-
-        element.id =
-          "barcode-reader-" +
-          Date.now();
-
-        element.style.display =
-          "none";
-
-        document.body.appendChild(
-          element
-        );
-
-
-        let scanner = null;
-
-
-        try {
-
-          scanner =
-            new Html5Qrcode(
-              element.id
-            );
-
-
-          /*
-           * IMPORTANT:
-           *
-           * Explicitly tell the decoder
-           * that this is CODABAR.
-           */
-
-          const decoded =
-            await scanner.scanFile(
-              file,
-              false
-            );
-
-
-          await scanner.clear();
-
-          element.remove();
-
-
-          console.log(
-            "Decoded barcode:",
-            decoded
-          );
-
-
-          if (decoded) {
-
-            checkBarcode(
-              decoded
-            );
-
-          }
-
-          else {
-
-            scanFailed();
-
-          }
-
-        }
-
-        catch (error) {
-
-          console.log(
-            "Codabar scan failed:",
-            error
-          );
-
-
-          try {
-
-            if (scanner) {
-              await scanner.clear();
-            }
-
-          }
-
-          catch (_) {}
-
-
-          element.remove();
-
-
-          scanFailed();
-
-        }
-
-      },
-
-      "image/jpeg",
-
-      1.0
-
+    checkBarcode(
+      barcode
     );
 
   }
@@ -671,51 +500,17 @@
 
   /*
    * =====================================================
-   * SCAN FAILED
+   * SEND TO GOOGLE
    * =====================================================
    */
 
-  function scanFailed() {
-
-    processing = false;
-
-    scanButton.disabled =
-      false;
-
-
-    status.textContent =
-      "Couldn't find the barcode. Center it inside the box and try again.";
-
-  }
-
-
-  /*
-   * =====================================================
-   * GOOGLE CHECK-IN
-   * =====================================================
-   */
-
-  function checkBarcode(barcode) {
+  function checkBarcode(
+    barcode
+  ) {
 
     const callbackName =
-      "callback_" +
+      "checkInCallback_" +
       Date.now();
-
-
-    window[callbackName] =
-      function(data) {
-
-        handleResult(data);
-
-
-        delete window[
-          callbackName
-        ];
-
-
-        script.remove();
-
-      };
 
 
     const script =
@@ -724,14 +519,23 @@
       );
 
 
-    script.src =
-      API_URL +
-      "?barcode=" +
-      encodeURIComponent(
-        barcode
-      ) +
-      "&callback=" +
-      callbackName;
+    window[
+      callbackName
+    ] = function(data) {
+
+      handleResult(
+        data
+      );
+
+
+      delete window[
+        callbackName
+      ];
+
+
+      script.remove();
+
+    };
 
 
     script.onerror =
@@ -750,6 +554,16 @@
       };
 
 
+    script.src =
+      API_URL +
+      "?barcode=" +
+      encodeURIComponent(
+        barcode
+      ) +
+      "&callback=" +
+      callbackName;
+
+
     document.body.appendChild(
       script
     );
@@ -759,31 +573,36 @@
 
   /*
    * =====================================================
-   * HANDLE RESULT
+   * RESULT
    * =====================================================
    */
 
-  function handleResult(data) {
+  function handleResult(
+    data
+  ) {
 
-    processing = false;
+    const box =
+      document.getElementById(
+        "result"
+      );
 
 
-    result.className =
+    box.className =
       "";
 
 
-    result.style.display =
+    box.style.display =
       "block";
 
 
     if (data.success) {
 
-      result.classList.add(
+      box.classList.add(
         "success"
       );
 
 
-      result.innerHTML = `
+      box.innerHTML = `
 
         <div class="result-title">
           ✅ CHECK-IN SUCCESSFUL
@@ -805,14 +624,15 @@
 
     }
 
+
     else if (data.duplicate) {
 
-      result.classList.add(
+      box.classList.add(
         "duplicate"
       );
 
 
-      result.innerHTML = `
+      box.innerHTML = `
 
         <div class="result-title">
           ⚠️ ALREADY SCANNED
@@ -835,14 +655,15 @@
 
     }
 
+
     else {
 
-      result.classList.add(
+      box.classList.add(
         "error"
       );
 
 
-      result.innerHTML = `
+      box.innerHTML = `
 
         <div class="result-title">
           ⚠️ ERROR
@@ -859,15 +680,15 @@
     }
 
 
-    scanButton.disabled =
-      true;
-
-
-    nextButton.style.display =
+    document.getElementById(
+      "nextButton"
+    ).style.display =
       "block";
 
 
-    status.textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "Ready for the next card.";
 
   }
@@ -875,24 +696,27 @@
 
   /*
    * =====================================================
-   * GOOGLE ERROR
+   * CONNECTION ERROR
    * =====================================================
    */
 
   function handleError() {
 
-    processing = false;
+    const box =
+      document.getElementById(
+        "result"
+      );
 
 
-    result.className =
+    box.className =
       "error";
 
 
-    result.style.display =
+    box.style.display =
       "block";
 
 
-    result.innerHTML = `
+    box.innerHTML = `
 
       <div class="result-title">
         ⚠️ CONNECTION ERROR
@@ -900,18 +724,82 @@
 
       <div>
         Could not contact the check-in system.
-        Please try again.
       </div>
 
     `;
 
 
-    scanButton.disabled =
-      true;
-
-
-    nextButton.style.display =
+    document.getElementById(
+      "nextButton"
+    ).style.display =
       "block";
+
+
+    document.getElementById(
+      "status"
+    ).textContent =
+      "Please try again.";
+
+  }
+
+
+  /*
+   * =====================================================
+   * NEXT CARD
+   * =====================================================
+   */
+
+  function startNextScan() {
+
+    document.getElementById(
+      "result"
+    ).style.display =
+      "none";
+
+
+    document.getElementById(
+      "result"
+    ).className =
+      "";
+
+
+    document.getElementById(
+      "nextButton"
+    ).style.display =
+      "none";
+
+
+    processing = false;
+
+
+    document.getElementById(
+      "status"
+    ).textContent =
+      "Starting camera...";
+
+
+    /*
+     * Clear old scanner instance.
+     */
+
+    if (scanner) {
+
+      scanner
+        .clear()
+        .catch(() => {});
+
+    }
+
+
+    /*
+     * Give the camera a moment
+     * before starting again.
+     */
+
+    setTimeout(
+      startScanner,
+      300
+    );
 
   }
 
@@ -951,93 +839,33 @@
     processing = true;
 
 
-    input.disabled =
-      true;
-
-
-    status.textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "Checking barcode...";
+
+
+    /*
+     * Stop camera if running.
+     */
+
+    if (scanner) {
+
+      scanner
+        .stop()
+        .catch(() => {});
+
+    }
+
+
+    input.value = "";
 
 
     checkBarcode(
       barcode
     );
 
-
-    input.value = "";
-
-    input.disabled =
-      false;
-
   }
-
-
-  /*
-   * =====================================================
-   * RESET
-   * =====================================================
-   */
-
-  function resetScanner() {
-
-    result.style.display =
-      "none";
-
-
-    result.className =
-      "";
-
-
-    nextButton.style.display =
-      "none";
-
-
-    processing = false;
-
-
-    scanButton.disabled =
-      false;
-
-
-    status.textContent =
-      "Camera ready • Center the barcode";
-
-  }
-
-
-  /*
-   * =====================================================
-   * ESCAPE HTML
-   * =====================================================
-   */
-
-  function escapeHtml(text) {
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.textContent =
-      text;
-
-
-    return div.innerHTML;
-
-  }
-
-
-  /*
-   * =====================================================
-   * START
-   * =====================================================
-   */
-
-  window.addEventListener(
-    "load",
-    startCamera
-  );
 
 
   /*
@@ -1064,6 +892,43 @@
 
       }
     );
+
+
+  /*
+   * =====================================================
+   * HTML ESCAPING
+   * =====================================================
+   */
+
+  function escapeHtml(
+    text
+  ) {
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.textContent =
+      text;
+
+
+    return div.innerHTML;
+
+  }
+
+
+  /*
+   * =====================================================
+   * START ON PAGE LOAD
+   * =====================================================
+   */
+
+  window.addEventListener(
+    "load",
+    startScanner
+  );
 
 </script>
 
