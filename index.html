@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -15,6 +14,7 @@
 
   <title>MavCARD Check-In</title>
 
+  <!-- Barcode scanning library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
@@ -23,19 +23,24 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: #111827;
+      color: white;
 
       font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        Roboto,
         Arial,
         sans-serif;
-
-      background: #111827;
-      color: white;
 
       display: flex;
       justify-content: center;
@@ -45,104 +50,319 @@
       width: 100%;
       max-width: 600px;
 
-      padding: 20px;
+      padding: 18px;
 
       text-align: center;
     }
 
+    /* -----------------------------
+       HEADER
+    ----------------------------- */
+
     h1 {
-      margin: 10px 0 5px;
+      margin: 8px 0 4px;
+
       font-size: 28px;
+      font-weight: 800;
     }
 
     .subtitle {
       color: #9ca3af;
-      margin-bottom: 20px;
+
+      font-size: 15px;
+
+      margin-bottom: 18px;
     }
 
-    #reader {
+
+    /* -----------------------------
+       CAMERA
+    ----------------------------- */
+
+    .camera-container {
+      position: relative;
+
       width: 100%;
-      max-width: 500px;
 
-      margin: 0 auto;
+      background: #000;
 
-      border-radius: 18px;
+      border-radius: 20px;
+
       overflow: hidden;
 
-      background: black;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
+    video {
+      display: block;
+
+      width: 100%;
+
+      aspect-ratio: 4 / 3;
+
+      object-fit: cover;
+    }
+
+
+    /* -----------------------------
+       BARCODE GUIDE
+    ----------------------------- */
+
+    .scan-guide {
+      position: absolute;
+
+      left: 8%;
+      right: 8%;
+
+      top: 35%;
+
+      height: 30%;
+
+      border: 3px solid white;
+
+      border-radius: 12px;
+
+      pointer-events: none;
+
+      box-shadow:
+        0 0 0 9999px rgba(0, 0, 0, 0.15);
+    }
+
+    .scan-line {
+      position: absolute;
+
+      left: 10%;
+      right: 10%;
+
+      top: 50%;
+
+      height: 2px;
+
+      background: white;
+
+      opacity: 0.8;
+    }
+
+
+    /* -----------------------------
+       SCAN BUTTON
+    ----------------------------- */
+
+    #scanButton {
+      width: 100%;
+
+      margin-top: 18px;
+
+      padding: 18px;
+
+      border: none;
+
+      border-radius: 16px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 21px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 5px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    #scanButton:active {
+      transform: scale(0.98);
+    }
+
+    #scanButton:disabled {
+      background: #374151;
+
+      color: #9ca3af;
+
+      cursor: not-allowed;
+
+      box-shadow: none;
+    }
+
+
+    /* -----------------------------
+       STATUS
+    ----------------------------- */
+
+    #status {
+      margin-top: 12px;
+
+      color: #9ca3af;
+
+      font-size: 14px;
+
+      min-height: 20px;
+    }
+
+
+    /* -----------------------------
+       RESULT
+    ----------------------------- */
+
     #result {
-      margin-top: 20px;
-      padding: 22px;
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 24px;
 
       border-radius: 18px;
-
-      display: none;
     }
 
     #result.success {
       display: block;
+
       background: #064e3b;
+
       border: 2px solid #10b981;
     }
 
     #result.duplicate {
       display: block;
+
       background: #7f1d1d;
+
       border: 2px solid #ef4444;
     }
 
     #result.error {
       display: block;
+
       background: #78350f;
+
       border: 2px solid #f59e0b;
     }
 
     .result-title {
-      font-size: 25px;
-      font-weight: 800;
-      margin-bottom: 10px;
+      font-size: 26px;
+
+      font-weight: 900;
+
+      margin-bottom: 12px;
     }
 
     .barcode {
       font-family: monospace;
-      font-size: 19px;
+
+      font-size: 20px;
 
       word-break: break-all;
     }
 
     .time {
-      margin-top: 8px;
+      margin-top: 10px;
+
       color: #d1d5db;
+
+      font-size: 15px;
     }
 
-    button {
+
+    /* -----------------------------
+       RESET BUTTON
+    ----------------------------- */
+
+    #nextButton {
+      display: none;
+
       width: 100%;
-      margin-top: 16px;
+
+      margin-top: 14px;
 
       padding: 16px;
 
       border: none;
+
       border-radius: 14px;
 
-      background: #2563eb;
+      background: #374151;
+
       color: white;
 
       font-size: 18px;
+
       font-weight: 700;
+
+      cursor: pointer;
     }
 
-    button:active {
-      transform: scale(.98);
+
+    /* -----------------------------
+       MANUAL ENTRY
+    ----------------------------- */
+
+    .manual {
+      margin-top: 25px;
+
+      padding-top: 20px;
+
+      border-top: 1px solid #374151;
     }
 
-    .status {
-      margin-top: 15px;
-
+    .manual-title {
       color: #9ca3af;
 
       font-size: 14px;
+
+      margin-bottom: 10px;
+    }
+
+    .manual-row {
+      display: flex;
+
+      gap: 8px;
+    }
+
+    #manualInput {
+      flex: 1;
+
+      min-width: 0;
+
+      padding: 14px;
+
+      border: 1px solid #4b5563;
+
+      border-radius: 12px;
+
+      background: #1f2937;
+
+      color: white;
+
+      font-size: 17px;
+    }
+
+    #manualButton {
+      padding: 14px 18px;
+
+      border: none;
+
+      border-radius: 12px;
+
+      background: #4b5563;
+
+      color: white;
+
+      font-weight: 700;
+
+      font-size: 16px;
+    }
+
+
+    /* -----------------------------
+       HIDDEN CANVAS
+    ----------------------------- */
+
+    #captureCanvas {
+      display: none;
     }
 
   </style>
@@ -152,163 +372,536 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>📇 MavCARD Check-In</h1>
+  <h1>📇 MavCARD Check-In</h1>
 
-    <div class="subtitle">
-      Scan the barcode on the back of the MavCARD
-    </div>
+  <div class="subtitle">
+    Point the camera at the barcode, then press Scan
+  </div>
 
-    <div id="reader"></div>
 
-    <div id="result"></div>
+  <!-- CAMERA -->
 
-    <button
-      id="restart"
-      onclick="restartScanner()"
-      style="display:none;"
-    >
-      Scan Next Card
-    </button>
+  <div class="camera-container">
 
-    <div
-      class="status"
-      id="status"
-    >
-      Starting camera...
+    <video
+      id="camera"
+      autoplay
+      playsinline
+      muted
+    ></video>
+
+    <div class="scan-guide">
+      <div class="scan-line"></div>
     </div>
 
   </div>
 
 
+  <!-- SCAN BUTTON -->
+
+  <button
+    id="scanButton"
+    onclick="captureAndScan()"
+    disabled
+  >
+    📸 SCAN BARCODE
+  </button>
+
+
+  <div id="status">
+    Starting camera...
+  </div>
+
+
+  <!-- RESULT -->
+
+  <div id="result"></div>
+
+
+  <!-- NEXT -->
+
+  <button
+    id="nextButton"
+    onclick="resetScanner()"
+  >
+    📸 SCAN NEXT CARD
+  </button>
+
+
+  <!-- MANUAL -->
+
+  <div class="manual">
+
+    <div class="manual-title">
+      Barcode won't scan? Enter it manually.
+    </div>
+
+    <div class="manual-row">
+
+      <input
+        id="manualInput"
+        type="text"
+        inputmode="numeric"
+        placeholder="Barcode number"
+        autocomplete="off"
+      >
+
+      <button
+        id="manualButton"
+        onclick="manualCheckIn()"
+      >
+        Check In
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- HIDDEN CANVAS -->
+
+  <canvas id="captureCanvas"></canvas>
+
+</div>
+
+
 <script>
 
-  // =====================================================
-  // PUT YOUR GOOGLE APPS SCRIPT /exec URL HERE
-  // =====================================================
+  /* =====================================================
+     CONFIGURATION
+  ===================================================== */
 
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbzmcB48boLtRRmLafZzvT4Np8dM0esh0AVOk1mFGCqAgCtrjXm9xEEGp7ZXCyTg9nQM/exec";
+    "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
 
 
-  let scanner = null;
-  let scanning = false;
+  /* =====================================================
+     VARIABLES
+  ===================================================== */
+
+  const video =
+    document.getElementById("camera");
+
+  const canvas =
+    document.getElementById("captureCanvas");
+
+  const scanButton =
+    document.getElementById("scanButton");
+
+  const status =
+    document.getElementById("status");
+
+  const result =
+    document.getElementById("result");
+
+  const nextButton =
+    document.getElementById("nextButton");
+
+  let cameraStream = null;
+
   let processing = false;
 
 
-  // -----------------------------------------------------
-  // START CAMERA
-  // -----------------------------------------------------
+  /* =====================================================
+     START CAMERA
+  ===================================================== */
 
-  function startScanner() {
+  async function startCamera() {
 
-    scanner = new Html5Qrcode("reader");
+    try {
 
-    scanner.start(
+      status.textContent =
+        "Requesting camera...";
 
-      {
-        facingMode: "environment"
-      },
 
-      {
-        fps: 10,
+      cameraStream =
+        await navigator.mediaDevices.getUserMedia({
 
-        qrbox: {
-          width: 320,
-          height: 160
-        },
+          video: {
 
-formatsToSupport: [
-  Html5QrcodeSupportedFormats.CODE_128,
-  Html5QrcodeSupportedFormats.CODE_39,
-  Html5QrcodeSupportedFormats.CODE_93,
-  Html5QrcodeSupportedFormats.CODABAR,
-  Html5QrcodeSupportedFormats.EAN_13,
-  Html5QrcodeSupportedFormats.EAN_8,
-  Html5QrcodeSupportedFormats.UPC_A,
-  Html5QrcodeSupportedFormats.UPC_E,
-  Html5QrcodeSupportedFormats.ITF,
-  Html5QrcodeSupportedFormats.ITF_14,
-  Html5QrcodeSupportedFormats.RSS_14,
-  Html5QrcodeSupportedFormats.RSS_EXPANDED
-]
+            facingMode: {
+              ideal: "environment"
+            },
 
-      },
+            width: {
+              ideal: 1920
+            },
 
-      onScanSuccess,
+            height: {
+              ideal: 1080
+            }
 
-      onScanFailure
+          },
 
-    )
+          audio: false
 
-    .then(() => {
+        });
 
-      scanning = true;
 
-      document.getElementById("status")
-        .textContent =
-        "Camera ready • Scan a MavCARD";
+      video.srcObject =
+        cameraStream;
 
-    })
 
-    .catch(error => {
+      await video.play();
 
-      document.getElementById("status")
-        .textContent =
-        "Camera error: " + error;
 
-    });
+      scanButton.disabled = false;
+
+      status.textContent =
+        "Camera ready • Line up the barcode";
+
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      status.textContent =
+        "Camera error: " + error.message;
+
+    }
 
   }
 
 
-  // -----------------------------------------------------
-  // BARCODE SCANNED
-  // -----------------------------------------------------
+  /* =====================================================
+     CAPTURE IMAGE
+  ===================================================== */
 
-  function onScanSuccess(decodedText) {
+  async function captureAndScan() {
 
-    if (!scanning || processing) {
+    if (processing) {
       return;
     }
 
     processing = true;
 
-    scanner.stop()
-      .then(() => {
+    scanButton.disabled = true;
 
-        scanning = false;
+    status.textContent =
+      "📸 Capturing image...";
 
-        document.getElementById("status")
-          .textContent =
-          "Checking barcode...";
 
-        checkBarcode(decodedText);
+    try {
 
-      });
+      /*
+       * Capture the current video frame.
+       */
+
+      canvas.width =
+        video.videoWidth;
+
+      canvas.height =
+        video.videoHeight;
+
+
+      const context =
+        canvas.getContext("2d");
+
+
+      context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+
+      status.textContent =
+        "🔎 Looking for barcode...";
+
+
+      /*
+       * Try native BarcodeDetector first.
+       */
+
+      let barcode =
+        await tryNativeBarcodeDetector();
+
+
+      /*
+       * If the browser doesn't support
+       * BarcodeDetector or it couldn't find
+       * anything, use html5-qrcode.
+       */
+
+      if (!barcode) {
+
+        barcode =
+          await tryHtml5QrCode();
+
+      }
+
+
+      if (barcode) {
+
+        status.textContent =
+          "Barcode found • Checking...";
+
+        checkBarcode(barcode);
+
+      }
+
+      else {
+
+        processing = false;
+
+        scanButton.disabled = false;
+
+        status.textContent =
+          "Couldn't find a barcode. Move closer, improve lighting, and try again.";
+
+      }
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      processing = false;
+
+      scanButton.disabled = false;
+
+      status.textContent =
+        "Couldn't read the barcode. Try again.";
+
+    }
 
   }
 
 
-  function onScanFailure(error) {
-    // Normal scanning failures are ignored.
+  /* =====================================================
+     NATIVE BARCODE DETECTOR
+  ===================================================== */
+
+  async function tryNativeBarcodeDetector() {
+
+    /*
+     * BarcodeDetector isn't available
+     * on every browser.
+     */
+
+    if (!("BarcodeDetector" in window)) {
+
+      return null;
+
+    }
+
+
+    try {
+
+      const formats =
+        await BarcodeDetector.getSupportedFormats();
+
+
+      /*
+       * We only care about 1D barcodes.
+       */
+
+      const wantedFormats = [
+
+        "code_128",
+        "code_39",
+        "code_93",
+        "codabar",
+        "ean_13",
+        "ean_8",
+        "itf",
+        "upc_a",
+        "upc_e"
+
+      ];
+
+
+      const supported =
+        wantedFormats.filter(
+          format => formats.includes(format)
+        );
+
+
+      if (supported.length === 0) {
+
+        return null;
+
+      }
+
+
+      const detector =
+        new BarcodeDetector({
+          formats: supported
+        });
+
+
+      const barcodes =
+        await detector.detect(canvas);
+
+
+      if (
+        barcodes &&
+        barcodes.length > 0
+      ) {
+
+        return barcodes[0].rawValue;
+
+      }
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "Native BarcodeDetector failed:",
+        error
+      );
+
+    }
+
+
+    return null;
+
   }
 
 
-  // -----------------------------------------------------
-  // SEND BARCODE TO GOOGLE APPS SCRIPT
-  // -----------------------------------------------------
+  /* =====================================================
+     HTML5-QRCODE IMAGE SCANNER
+  ===================================================== */
+
+  async function tryHtml5QrCode() {
+
+    const imageData =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.95
+      );
+
+
+    const scanner =
+      new Html5Qrcode(
+        "reader-placeholder"
+      );
+
+
+    /*
+     * html5-qrcode expects an element
+     * to exist, so create a temporary one.
+     */
+
+    let temp =
+      document.createElement("div");
+
+    temp.id =
+      "reader-placeholder";
+
+    temp.style.display =
+      "none";
+
+    document.body.appendChild(temp);
+
+
+    try {
+
+      const decoded =
+        await scanner.scanFile(
+          dataURLToFile(
+            imageData,
+            "capture.jpg"
+          ),
+          false
+        );
+
+
+      await scanner.clear();
+
+      temp.remove();
+
+      return decoded;
+
+    }
+
+    catch (error) {
+
+      try {
+        await scanner.clear();
+      }
+      catch (_) {}
+
+      temp.remove();
+
+      return null;
+
+    }
+
+  }
+
+
+  /* =====================================================
+     DATA URL → FILE
+  ===================================================== */
+
+  function dataURLToFile(
+    dataURL,
+    filename
+  ) {
+
+    const parts =
+      dataURL.split(",");
+
+    const mime =
+      parts[0]
+        .match(/:(.*?);/)[1];
+
+    const binary =
+      atob(parts[1]);
+
+    const array =
+      new Uint8Array(
+        binary.length
+      );
+
+
+    for (
+      let i = 0;
+      i < binary.length;
+      i++
+    ) {
+
+      array[i] =
+        binary.charCodeAt(i);
+
+    }
+
+
+    return new File(
+      [array],
+      filename,
+      {
+        type: mime
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     CHECK BARCODE WITH GOOGLE
+  ===================================================== */
 
   function checkBarcode(barcode) {
 
     const callbackName =
-      "callback_" + Date.now();
+      "callback_" +
+      Date.now();
+
 
     window[callbackName] =
-      function(result) {
+      function(data) {
 
-        handleResult(result);
+        handleResult(data);
 
         delete window[callbackName];
 
@@ -319,6 +912,7 @@ formatsToSupport: [
 
     const script =
       document.createElement("script");
+
 
     script.src =
       API_URL +
@@ -345,77 +939,89 @@ formatsToSupport: [
   }
 
 
-  // -----------------------------------------------------
-  // HANDLE GOOGLE RESPONSE
-  // -----------------------------------------------------
+  /* =====================================================
+     RESULT
+  ===================================================== */
 
-  function handleResult(result) {
+  function handleResult(data) {
 
-    const box =
-      document.getElementById("result");
-
-    box.className = "";
-
-    box.style.display = "block";
+    processing = false;
 
 
-    if (result.success) {
+    result.className = "";
 
-      box.classList.add("success");
+    result.style.display =
+      "block";
 
-      box.innerHTML = `
+
+    if (data.success) {
+
+      result.classList.add(
+        "success"
+      );
+
+
+      result.innerHTML = `
 
         <div class="result-title">
           ✅ CHECK-IN SUCCESSFUL
         </div>
 
         <div class="barcode">
-          ${escapeHtml(result.barcode)}
+          ${escapeHtml(data.barcode)}
         </div>
 
         <div class="time">
-          ${escapeHtml(result.time)}
+          ${escapeHtml(data.time)}
         </div>
 
       `;
 
     }
 
-    else if (result.duplicate) {
 
-      box.classList.add("duplicate");
+    else if (data.duplicate) {
 
-      box.innerHTML = `
+      result.classList.add(
+        "duplicate"
+      );
+
+
+      result.innerHTML = `
 
         <div class="result-title">
           ⚠️ ALREADY SCANNED
         </div>
 
         <div class="barcode">
-          ${escapeHtml(result.barcode)}
+          ${escapeHtml(data.barcode)}
         </div>
 
         <div class="time">
           Original check-in:
-          ${escapeHtml(result.previousTime)}
+          ${escapeHtml(data.previousTime)}
         </div>
 
       `;
 
     }
 
+
     else {
 
-      box.classList.add("error");
+      result.classList.add(
+        "error"
+      );
 
-      box.innerHTML = `
+
+      result.innerHTML = `
 
         <div class="result-title">
           ⚠️ ERROR
         </div>
 
         <div>
-          ${escapeHtml(result.message)}
+          ${escapeHtml(data.message)}
         </div>
 
       `;
@@ -423,28 +1029,36 @@ formatsToSupport: [
     }
 
 
-    document.getElementById("restart")
-      .style.display = "block";
+    scanButton.disabled = true;
 
-    processing = false;
+    nextButton.style.display =
+      "block";
+
+
+    status.textContent =
+      "Ready for the next card.";
 
   }
 
 
-  // -----------------------------------------------------
-  // ERROR
-  // -----------------------------------------------------
+  /* =====================================================
+     ERROR
+  ===================================================== */
 
   function handleError() {
 
-    const box =
-      document.getElementById("result");
+    processing = false;
 
-    box.className = "error";
 
-    box.style.display = "block";
+    result.className =
+      "error";
 
-    box.innerHTML = `
+
+    result.style.display =
+      "block";
+
+
+    result.innerHTML = `
 
       <div class="result-title">
         ⚠️ CONNECTION ERROR
@@ -458,58 +1072,141 @@ formatsToSupport: [
     `;
 
 
-    document.getElementById("restart")
-      .style.display = "block";
+    scanButton.disabled = true;
 
-    processing = false;
-
-  }
-
-
-  // -----------------------------------------------------
-  // RESTART
-  // -----------------------------------------------------
-
-  function restartScanner() {
-
-    document.getElementById("result")
-      .style.display = "none";
-
-    document.getElementById("restart")
-      .style.display = "none";
-
-    document.getElementById("status")
-      .textContent =
-      "Starting camera...";
-
-    processing = false;
-
-    startScanner();
+    nextButton.style.display =
+      "block";
 
   }
 
 
-  // -----------------------------------------------------
-  // BASIC HTML SAFETY
-  // -----------------------------------------------------
+  /* =====================================================
+     MANUAL CHECK-IN
+  ===================================================== */
+
+  function manualCheckIn() {
+
+    if (processing) {
+      return;
+    }
+
+
+    const input =
+      document.getElementById(
+        "manualInput"
+      );
+
+
+    const barcode =
+      input.value.trim();
+
+
+    if (!barcode) {
+
+      input.focus();
+
+      return;
+
+    }
+
+
+    processing = true;
+
+    input.disabled = true;
+
+
+    status.textContent =
+      "Checking barcode...";
+
+
+    checkBarcode(barcode);
+
+
+    input.value = "";
+
+    input.disabled = false;
+
+  }
+
+
+  /* =====================================================
+     RESET
+  ===================================================== */
+
+  function resetScanner() {
+
+    result.style.display =
+      "none";
+
+
+    result.className =
+      "";
+
+
+    nextButton.style.display =
+      "none";
+
+
+    processing = false;
+
+
+    scanButton.disabled =
+      false;
+
+
+    status.textContent =
+      "Camera ready • Line up the barcode";
+
+  }
+
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
 
   function escapeHtml(text) {
 
     const div =
       document.createElement("div");
 
-    div.textContent = text;
+    div.textContent =
+      text;
 
     return div.innerHTML;
 
   }
 
 
-  // -----------------------------------------------------
-  // START
-  // -----------------------------------------------------
+  /* =====================================================
+     START
+  ===================================================== */
 
-  window.onload = startScanner;
+  window.addEventListener(
+    "load",
+    startCamera
+  );
+
+
+  /* =====================================================
+     ENTER KEY FOR MANUAL ENTRY
+  ===================================================== */
+
+  document
+    .getElementById("manualInput")
+    .addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          manualCheckIn();
+
+        }
+
+      }
+    );
 
 </script>
 
