@@ -601,14 +601,66 @@
       const context =
         canvas.getContext("2d");
 
+/*
+ * Capture the full-resolution camera frame.
+ */
+context.drawImage(
+  video,
+  0,
+  0,
+  canvas.width,
+  canvas.height
+);
 
-      context.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+/*
+ * Increase contrast slightly.
+ * This can help with small printed barcodes.
+ */
+const image =
+  context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+const pixels =
+  image.data;
+
+for (
+  let i = 0;
+  i < pixels.length;
+  i += 4
+) {
+
+  const brightness =
+    0.299 * pixels[i] +
+    0.587 * pixels[i + 1] +
+    0.114 * pixels[i + 2];
+
+  if (brightness > 160) {
+
+    pixels[i] = 255;
+    pixels[i + 1] = 255;
+    pixels[i + 2] = 255;
+
+  }
+
+  else if (brightness < 90) {
+
+    pixels[i] = 0;
+    pixels[i + 1] = 0;
+    pixels[i + 2] = 0;
+
+  }
+
+}
+
+context.putImageData(
+  image,
+  0,
+  0
+);
 
 
       status.textContent =
@@ -771,73 +823,98 @@
      HTML5-QRCODE IMAGE SCANNER
   ===================================================== */
 
-  async function tryHtml5QrCode() {
+ async function tryHtml5QrCode() {
 
-    const imageData =
-      canvas.toDataURL(
-        "image/jpeg",
-        0.95
-      );
+  const imageData =
+    canvas.toDataURL(
+      "image/jpeg",
+      0.98
+    );
 
+  // Create temporary element FIRST
+  const temp =
+    document.createElement("div");
 
-    const scanner =
+  temp.id =
+    "reader-placeholder-" + Date.now();
+
+  temp.style.position = "fixed";
+  temp.style.left = "-9999px";
+  temp.style.top = "-9999px";
+  temp.style.width = "1px";
+  temp.style.height = "1px";
+
+  document.body.appendChild(temp);
+
+  let scanner = null;
+
+  try {
+
+    // Now create the scanner
+    scanner =
       new Html5Qrcode(
-        "reader-placeholder"
+        temp.id,
+        {
+          verbose: false
+        }
       );
 
+    const file =
+      dataURLToFile(
+        imageData,
+        "mavcard.jpg"
+      );
 
     /*
-     * html5-qrcode expects an element
-     * to exist, so create a temporary one.
+     * scanFile() uses the barcode decoder
+     * against the captured image.
+     *
+     * We deliberately don't restrict the
+     * barcode formats here.
      */
+    const decoded =
+      await scanner.scanFile(
+        file,
+        false
+      );
 
-    let temp =
-      document.createElement("div");
+    await scanner.clear();
 
-    temp.id =
-      "reader-placeholder";
+    temp.remove();
 
-    temp.style.display =
-      "none";
+    console.log(
+      "Barcode decoded:",
+      decoded
+    );
 
-    document.body.appendChild(temp);
-
-
-    try {
-
-      const decoded =
-        await scanner.scanFile(
-          dataURLToFile(
-            imageData,
-            "capture.jpg"
-          ),
-          false
-        );
-
-
-      await scanner.clear();
-
-      temp.remove();
-
-      return decoded;
-
-    }
-
-    catch (error) {
-
-      try {
-        await scanner.clear();
-      }
-      catch (_) {}
-
-      temp.remove();
-
-      return null;
-
-    }
+    return decoded;
 
   }
 
+  catch (error) {
+
+    console.log(
+      "html5-qrcode scan failed:",
+      error
+    );
+
+    try {
+
+      if (scanner) {
+        await scanner.clear();
+      }
+
+    }
+
+    catch (_) {}
+
+    temp.remove();
+
+    return null;
+
+  }
+
+}
 
   /* =====================================================
      DATA URL → FILE
