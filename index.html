@@ -6,15 +6,11 @@
 
   <meta
     name="viewport"
-    content="width=device-width,
-             initial-scale=1,
-             maximum-scale=1,
-             user-scalable=no"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
   >
 
   <title>MavCARD Check-In</title>
 
-  <!-- Barcode scanning library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
@@ -23,14 +19,10 @@
       box-sizing: border-box;
     }
 
-    html,
     body {
       margin: 0;
-      padding: 0;
-      min-height: 100%;
-    }
+      min-height: 100vh;
 
-    body {
       background: #111827;
       color: white;
 
@@ -38,7 +30,6 @@
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
-        Roboto,
         Arial,
         sans-serif;
 
@@ -49,49 +40,32 @@
     .container {
       width: 100%;
       max-width: 600px;
-
       padding: 18px;
-
       text-align: center;
     }
 
-    /* -----------------------------
-       HEADER
-    ----------------------------- */
-
     h1 {
-      margin: 8px 0 4px;
-
+      margin: 8px 0 5px;
       font-size: 28px;
       font-weight: 800;
     }
 
     .subtitle {
       color: #9ca3af;
-
-      font-size: 15px;
-
       margin-bottom: 18px;
+      font-size: 15px;
     }
-
-
-    /* -----------------------------
-       CAMERA
-    ----------------------------- */
 
     .camera-container {
       position: relative;
 
       width: 100%;
 
-      background: #000;
+      background: black;
 
       border-radius: 20px;
 
       overflow: hidden;
-
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
     video {
@@ -104,20 +78,14 @@
       object-fit: cover;
     }
 
-
-    /* -----------------------------
-       BARCODE GUIDE
-    ----------------------------- */
-
     .scan-guide {
       position: absolute;
 
-      left: 8%;
-      right: 8%;
+      left: 5%;
+      right: 5%;
 
-      top: 35%;
-
-      height: 30%;
+      top: 32%;
+      height: 36%;
 
       border: 3px solid white;
 
@@ -132,8 +100,8 @@
     .scan-line {
       position: absolute;
 
-      left: 10%;
-      right: 10%;
+      left: 5%;
+      right: 5%;
 
       top: 50%;
 
@@ -141,13 +109,8 @@
 
       background: white;
 
-      opacity: 0.8;
+      opacity: .8;
     }
-
-
-    /* -----------------------------
-       SCAN BUTTON
-    ----------------------------- */
 
     #scanButton {
       width: 100%;
@@ -169,44 +132,22 @@
       font-weight: 800;
 
       cursor: pointer;
-
-      box-shadow:
-        0 5px 15px rgba(37, 99, 235, 0.3);
-    }
-
-    #scanButton:active {
-      transform: scale(0.98);
     }
 
     #scanButton:disabled {
       background: #374151;
-
       color: #9ca3af;
-
-      cursor: not-allowed;
-
-      box-shadow: none;
     }
-
-
-    /* -----------------------------
-       STATUS
-    ----------------------------- */
 
     #status {
       margin-top: 12px;
 
+      min-height: 20px;
+
       color: #9ca3af;
 
       font-size: 14px;
-
-      min-height: 20px;
     }
-
-
-    /* -----------------------------
-       RESULT
-    ----------------------------- */
 
     #result {
       display: none;
@@ -262,14 +203,7 @@
       margin-top: 10px;
 
       color: #d1d5db;
-
-      font-size: 15px;
     }
-
-
-    /* -----------------------------
-       RESET BUTTON
-    ----------------------------- */
 
     #nextButton {
       display: none;
@@ -291,14 +225,7 @@
       font-size: 18px;
 
       font-weight: 700;
-
-      cursor: pointer;
     }
-
-
-    /* -----------------------------
-       MANUAL ENTRY
-    ----------------------------- */
 
     .manual {
       margin-top: 25px;
@@ -356,15 +283,6 @@
       font-size: 16px;
     }
 
-
-    /* -----------------------------
-       HIDDEN CANVAS
-    ----------------------------- */
-
-    #captureCanvas {
-      display: none;
-    }
-
   </style>
 
 </head>
@@ -377,11 +295,9 @@
   <h1>📇 MavCARD Check-In</h1>
 
   <div class="subtitle">
-    Point the camera at the barcode, then press Scan
+    Center the Codabar barcode and press Scan
   </div>
 
-
-  <!-- CAMERA -->
 
   <div class="camera-container">
 
@@ -399,11 +315,9 @@
   </div>
 
 
-  <!-- SCAN BUTTON -->
-
   <button
     id="scanButton"
-    onclick="captureAndScan()"
+    onclick="scanCurrentFrame()"
     disabled
   >
     📸 SCAN BARCODE
@@ -415,12 +329,8 @@
   </div>
 
 
-  <!-- RESULT -->
-
   <div id="result"></div>
 
-
-  <!-- NEXT -->
 
   <button
     id="nextButton"
@@ -429,8 +339,6 @@
     📸 SCAN NEXT CARD
   </button>
 
-
-  <!-- MANUAL -->
 
   <div class="manual">
 
@@ -443,8 +351,8 @@
       <input
         id="manualInput"
         type="text"
-        inputmode="numeric"
-        placeholder="Barcode number"
+        inputmode="text"
+        placeholder="Barcode"
         autocomplete="off"
       >
 
@@ -459,33 +367,29 @@
 
   </div>
 
-
-  <!-- HIDDEN CANVAS -->
-
-  <canvas id="captureCanvas"></canvas>
-
 </div>
 
 
 <script>
 
-  /* =====================================================
-     CONFIGURATION
-  ===================================================== */
+  /*
+   * =====================================================
+   * GOOGLE APPS SCRIPT URL
+   * =====================================================
+   */
 
   const API_URL =
     "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
 
 
-  /* =====================================================
-     VARIABLES
-  ===================================================== */
+  /*
+   * =====================================================
+   * VARIABLES
+   * =====================================================
+   */
 
   const video =
     document.getElementById("camera");
-
-  const canvas =
-    document.getElementById("captureCanvas");
 
   const scanButton =
     document.getElementById("scanButton");
@@ -499,14 +403,17 @@
   const nextButton =
     document.getElementById("nextButton");
 
+
   let cameraStream = null;
 
   let processing = false;
 
 
-  /* =====================================================
-     START CAMERA
-  ===================================================== */
+  /*
+   * =====================================================
+   * START CAMERA
+   * =====================================================
+   */
 
   async function startCamera() {
 
@@ -547,10 +454,12 @@
       await video.play();
 
 
-      scanButton.disabled = false;
+      scanButton.disabled =
+        false;
+
 
       status.textContent =
-        "Camera ready • Line up the barcode";
+        "Camera ready • Center the barcode";
 
 
     }
@@ -560,413 +469,231 @@
       console.error(error);
 
       status.textContent =
-        "Camera error: " + error.message;
+        "Camera error: " +
+        error.message;
 
     }
 
   }
 
 
-  /* =====================================================
-     CAPTURE IMAGE
-  ===================================================== */
+  /*
+   * =====================================================
+   * CAPTURE + CODABAR SCAN
+   * =====================================================
+   */
 
-  async function captureAndScan() {
+  async function scanCurrentFrame() {
 
     if (processing) {
       return;
     }
 
+
     processing = true;
 
-    scanButton.disabled = true;
+    scanButton.disabled =
+      true;
+
 
     status.textContent =
-      "📸 Capturing image...";
+      "📸 Capturing barcode...";
 
-
-    try {
-
-      /*
-       * Capture the current video frame.
-       */
-
-      canvas.width =
-        video.videoWidth;
-
-      canvas.height =
-        video.videoHeight;
-
-
-      const context =
-        canvas.getContext("2d");
-
-/*
- * Capture the full-resolution camera frame.
- */
-context.drawImage(
-  video,
-  0,
-  0,
-  canvas.width,
-  canvas.height
-);
-
-/*
- * Increase contrast slightly.
- * This can help with small printed barcodes.
- */
-const image =
-  context.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-const pixels =
-  image.data;
-
-for (
-  let i = 0;
-  i < pixels.length;
-  i += 4
-) {
-
-  const brightness =
-    0.299 * pixels[i] +
-    0.587 * pixels[i + 1] +
-    0.114 * pixels[i + 2];
-
-  if (brightness > 160) {
-
-    pixels[i] = 255;
-    pixels[i + 1] = 255;
-    pixels[i + 2] = 255;
-
-  }
-
-  else if (brightness < 90) {
-
-    pixels[i] = 0;
-    pixels[i + 1] = 0;
-    pixels[i + 2] = 0;
-
-  }
-
-}
-
-context.putImageData(
-  image,
-  0,
-  0
-);
-
-
-      status.textContent =
-        "🔎 Looking for barcode...";
-
-
-      /*
-       * Try native BarcodeDetector first.
-       */
-
-      let barcode =
-        await tryNativeBarcodeDetector();
-
-
-      /*
-       * If the browser doesn't support
-       * BarcodeDetector or it couldn't find
-       * anything, use html5-qrcode.
-       */
-
-      if (!barcode) {
-
-        barcode =
-          await tryHtml5QrCode();
-
-      }
-
-
-      if (barcode) {
-
-        status.textContent =
-          "Barcode found • Checking...";
-
-        checkBarcode(barcode);
-
-      }
-
-      else {
-
-        processing = false;
-
-        scanButton.disabled = false;
-
-        status.textContent =
-          "Couldn't find a barcode. Move closer, improve lighting, and try again.";
-
-      }
-
-    }
-
-    catch (error) {
-
-      console.error(error);
-
-      processing = false;
-
-      scanButton.disabled = false;
-
-      status.textContent =
-        "Couldn't read the barcode. Try again.";
-
-    }
-
-  }
-
-
-  /* =====================================================
-     NATIVE BARCODE DETECTOR
-  ===================================================== */
-
-  async function tryNativeBarcodeDetector() {
 
     /*
-     * BarcodeDetector isn't available
-     * on every browser.
+     * Create a canvas containing the
+     * current camera frame.
      */
 
-    if (!("BarcodeDetector" in window)) {
-
-      return null;
-
-    }
+    const canvas =
+      document.createElement("canvas");
 
 
-    try {
+    canvas.width =
+      video.videoWidth;
 
-      const formats =
-        await BarcodeDetector.getSupportedFormats();
-
-
-      /*
-       * We only care about 1D barcodes.
-       */
-
-      const wantedFormats = [
-
-        "code_128",
-        "code_39",
-        "code_93",
-        "codabar",
-        "ean_13",
-        "ean_8",
-        "itf",
-        "upc_a",
-        "upc_e"
-
-      ];
+    canvas.height =
+      video.videoHeight;
 
 
-      const supported =
-        wantedFormats.filter(
-          format => formats.includes(format)
+    const context =
+      canvas.getContext("2d");
+
+
+    context.drawImage(
+      video,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+    /*
+     * Convert the captured image to
+     * a JPEG file.
+     */
+
+    canvas.toBlob(
+
+      async function(blob) {
+
+        if (!blob) {
+
+          scanFailed();
+
+          return;
+
+        }
+
+
+        status.textContent =
+          "🔎 Reading Codabar...";
+
+
+        const file =
+          new File(
+            [blob],
+            "mavcard.jpg",
+            {
+              type: "image/jpeg"
+            }
+          );
+
+
+        /*
+         * Create temporary scanner element.
+         */
+
+        const element =
+          document.createElement("div");
+
+        element.id =
+          "barcode-reader-" +
+          Date.now();
+
+        element.style.display =
+          "none";
+
+        document.body.appendChild(
+          element
         );
 
 
-      if (supported.length === 0) {
-
-        return null;
-
-      }
+        let scanner = null;
 
 
-      const detector =
-        new BarcodeDetector({
-          formats: supported
-        });
+        try {
+
+          scanner =
+            new Html5Qrcode(
+              element.id
+            );
 
 
-      const barcodes =
-        await detector.detect(canvas);
+          /*
+           * IMPORTANT:
+           *
+           * Explicitly tell the decoder
+           * that this is CODABAR.
+           */
+
+          const decoded =
+            await scanner.scanFile(
+              file,
+              false
+            );
 
 
-      if (
-        barcodes &&
-        barcodes.length > 0
-      ) {
+          await scanner.clear();
 
-        return barcodes[0].rawValue;
-
-      }
-
-    }
-
-    catch (error) {
-
-      console.log(
-        "Native BarcodeDetector failed:",
-        error
-      );
-
-    }
+          element.remove();
 
 
-    return null;
+          console.log(
+            "Decoded barcode:",
+            decoded
+          );
 
-  }
 
+          if (decoded) {
 
-  /* =====================================================
-     HTML5-QRCODE IMAGE SCANNER
-  ===================================================== */
+            checkBarcode(
+              decoded
+            );
 
- async function tryHtml5QrCode() {
+          }
 
-  const imageData =
-    canvas.toDataURL(
-      "image/jpeg",
-      0.98
-    );
+          else {
 
-  // Create temporary element FIRST
-  const temp =
-    document.createElement("div");
+            scanFailed();
 
-  temp.id =
-    "reader-placeholder-" + Date.now();
+          }
 
-  temp.style.position = "fixed";
-  temp.style.left = "-9999px";
-  temp.style.top = "-9999px";
-  temp.style.width = "1px";
-  temp.style.height = "1px";
-
-  document.body.appendChild(temp);
-
-  let scanner = null;
-
-  try {
-
-    // Now create the scanner
-    scanner =
-      new Html5Qrcode(
-        temp.id,
-        {
-          verbose: false
         }
-      );
 
-    const file =
-      dataURLToFile(
-        imageData,
-        "mavcard.jpg"
-      );
+        catch (error) {
 
-    /*
-     * scanFile() uses the barcode decoder
-     * against the captured image.
-     *
-     * We deliberately don't restrict the
-     * barcode formats here.
-     */
-    const decoded =
-      await scanner.scanFile(
-        file,
-        false
-      );
-
-    await scanner.clear();
-
-    temp.remove();
-
-    console.log(
-      "Barcode decoded:",
-      decoded
-    );
-
-    return decoded;
-
-  }
-
-  catch (error) {
-
-    console.log(
-      "html5-qrcode scan failed:",
-      error
-    );
-
-    try {
-
-      if (scanner) {
-        await scanner.clear();
-      }
-
-    }
-
-    catch (_) {}
-
-    temp.remove();
-
-    return null;
-
-  }
-
-}
-
-  /* =====================================================
-     DATA URL → FILE
-  ===================================================== */
-
-  function dataURLToFile(
-    dataURL,
-    filename
-  ) {
-
-    const parts =
-      dataURL.split(",");
-
-    const mime =
-      parts[0]
-        .match(/:(.*?);/)[1];
-
-    const binary =
-      atob(parts[1]);
-
-    const array =
-      new Uint8Array(
-        binary.length
-      );
+          console.log(
+            "Codabar scan failed:",
+            error
+          );
 
 
-    for (
-      let i = 0;
-      i < binary.length;
-      i++
-    ) {
+          try {
 
-      array[i] =
-        binary.charCodeAt(i);
+            if (scanner) {
+              await scanner.clear();
+            }
 
-    }
+          }
+
+          catch (_) {}
 
 
-    return new File(
-      [array],
-      filename,
-      {
-        type: mime
-      }
+          element.remove();
+
+
+          scanFailed();
+
+        }
+
+      },
+
+      "image/jpeg",
+
+      1.0
+
     );
 
   }
 
 
-  /* =====================================================
-     CHECK BARCODE WITH GOOGLE
-  ===================================================== */
+  /*
+   * =====================================================
+   * SCAN FAILED
+   * =====================================================
+   */
+
+  function scanFailed() {
+
+    processing = false;
+
+    scanButton.disabled =
+      false;
+
+
+    status.textContent =
+      "Couldn't find the barcode. Center it inside the box and try again.";
+
+  }
+
+
+  /*
+   * =====================================================
+   * GOOGLE CHECK-IN
+   * =====================================================
+   */
 
   function checkBarcode(barcode) {
 
@@ -980,7 +707,11 @@ context.putImageData(
 
         handleResult(data);
 
-        delete window[callbackName];
+
+        delete window[
+          callbackName
+        ];
+
 
         script.remove();
 
@@ -988,13 +719,17 @@ context.putImageData(
 
 
     const script =
-      document.createElement("script");
+      document.createElement(
+        "script"
+      );
 
 
     script.src =
       API_URL +
       "?barcode=" +
-      encodeURIComponent(barcode) +
+      encodeURIComponent(
+        barcode
+      ) +
       "&callback=" +
       callbackName;
 
@@ -1002,30 +737,40 @@ context.putImageData(
     script.onerror =
       function() {
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
+
 
         script.remove();
+
 
         handleError();
 
       };
 
 
-    document.body.appendChild(script);
+    document.body.appendChild(
+      script
+    );
 
   }
 
 
-  /* =====================================================
-     RESULT
-  ===================================================== */
+  /*
+   * =====================================================
+   * HANDLE RESULT
+   * =====================================================
+   */
 
   function handleResult(data) {
 
     processing = false;
 
 
-    result.className = "";
+    result.className =
+      "";
+
 
     result.style.display =
       "block";
@@ -1045,17 +790,20 @@ context.putImageData(
         </div>
 
         <div class="barcode">
-          ${escapeHtml(data.barcode)}
+          ${escapeHtml(
+            data.barcode
+          )}
         </div>
 
         <div class="time">
-          ${escapeHtml(data.time)}
+          ${escapeHtml(
+            data.time
+          )}
         </div>
 
       `;
 
     }
-
 
     else if (data.duplicate) {
 
@@ -1071,18 +819,21 @@ context.putImageData(
         </div>
 
         <div class="barcode">
-          ${escapeHtml(data.barcode)}
+          ${escapeHtml(
+            data.barcode
+          )}
         </div>
 
         <div class="time">
           Original check-in:
-          ${escapeHtml(data.previousTime)}
+          ${escapeHtml(
+            data.previousTime
+          )}
         </div>
 
       `;
 
     }
-
 
     else {
 
@@ -1098,7 +849,9 @@ context.putImageData(
         </div>
 
         <div>
-          ${escapeHtml(data.message)}
+          ${escapeHtml(
+            data.message
+          )}
         </div>
 
       `;
@@ -1106,7 +859,9 @@ context.putImageData(
     }
 
 
-    scanButton.disabled = true;
+    scanButton.disabled =
+      true;
+
 
     nextButton.style.display =
       "block";
@@ -1118,9 +873,11 @@ context.putImageData(
   }
 
 
-  /* =====================================================
-     ERROR
-  ===================================================== */
+  /*
+   * =====================================================
+   * GOOGLE ERROR
+   * =====================================================
+   */
 
   function handleError() {
 
@@ -1149,7 +906,9 @@ context.putImageData(
     `;
 
 
-    scanButton.disabled = true;
+    scanButton.disabled =
+      true;
+
 
     nextButton.style.display =
       "block";
@@ -1157,9 +916,11 @@ context.putImageData(
   }
 
 
-  /* =====================================================
-     MANUAL CHECK-IN
-  ===================================================== */
+  /*
+   * =====================================================
+   * MANUAL ENTRY
+   * =====================================================
+   */
 
   function manualCheckIn() {
 
@@ -1189,26 +950,33 @@ context.putImageData(
 
     processing = true;
 
-    input.disabled = true;
+
+    input.disabled =
+      true;
 
 
     status.textContent =
       "Checking barcode...";
 
 
-    checkBarcode(barcode);
+    checkBarcode(
+      barcode
+    );
 
 
     input.value = "";
 
-    input.disabled = false;
+    input.disabled =
+      false;
 
   }
 
 
-  /* =====================================================
-     RESET
-  ===================================================== */
+  /*
+   * =====================================================
+   * RESET
+   * =====================================================
+   */
 
   function resetScanner() {
 
@@ -1232,31 +1000,39 @@ context.putImageData(
 
 
     status.textContent =
-      "Camera ready • Line up the barcode";
+      "Camera ready • Center the barcode";
 
   }
 
 
-  /* =====================================================
-     ESCAPE HTML
-  ===================================================== */
+  /*
+   * =====================================================
+   * ESCAPE HTML
+   * =====================================================
+   */
 
   function escapeHtml(text) {
 
     const div =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     div.textContent =
       text;
+
 
     return div.innerHTML;
 
   }
 
 
-  /* =====================================================
-     START
-  ===================================================== */
+  /*
+   * =====================================================
+   * START
+   * =====================================================
+   */
 
   window.addEventListener(
     "load",
@@ -1264,12 +1040,16 @@ context.putImageData(
   );
 
 
-  /* =====================================================
-     ENTER KEY FOR MANUAL ENTRY
-  ===================================================== */
+  /*
+   * =====================================================
+   * ENTER KEY
+   * =====================================================
+   */
 
   document
-    .getElementById("manualInput")
+    .getElementById(
+      "manualInput"
+    )
     .addEventListener(
       "keydown",
       function(event) {
